@@ -1,0 +1,9 @@
+{
+  "name": "aurafit-workout-tracker",
+  "version": "1.0.0",
+  "description": "Intelligent Calisthenics & Weights Tracker App",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve ."
+  }
+}

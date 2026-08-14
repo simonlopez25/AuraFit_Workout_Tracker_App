@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="description" content="AuraFit Pro — Tracker de entrenamiento de fuerza, calistenia y cardio. Planifica tus rutinas semanales, registra series y progresa con gamificación real." />
+    <title>AuraFit Pro — Tracker de Fuerza, Calistenia & Cardio</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- AuraFit Pro Design System -->
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app-container">
+
+      <!-- 1. ENCABEZADO PRINCIPAL -->
+      <header class="app-header">
+        <div class="brand">
+          <span class="brand-icon">⚡</span>
+          <span class="brand-name">AURA<span class="highlight-cyber">FIT</span> <span class="saas-badge">PRO</span></span>
+        </div>
+        <div class="header-actions">
+          <button
+            id="btnExportRoutines"
+            class="btn-secondary-sm"
+            title="Descarga un archivo de copia de seguridad que puedes importar después"
+            aria-label="Exportar copia de seguridad de rutinas"
+          >
+            💾 Copia de seguridad
+          </button>
+          <button id="btnOpenSmartImport" class="btn-secondary-sm" title="Crea una rutina desde texto o guarda una foto como referencia">
+            📥 Importar rutina
+          </button>
+          <button id="btnNewRoutineModal" class="btn-primary">
+            + Nueva Rutina
+          </button>
+        </div>
+      </header>
+
+      <!-- 2. CONMUTADOR DE MÓDULO: Fuerza vs Cardio -->
+      <nav class="module-switcher" role="tablist" aria-label="Módulo de entrenamiento">
+        <button id="btnSwitchStrength" class="module-btn active-strength" role="tab" aria-selected="true">
+          <span>🏋️</span> <span>Fuerza & Calistenia</span>
+        </button>
+        <button id="btnSwitchCardio" class="module-btn" role="tab" aria-selected="false">
+          <span>🏃</span> <span>Cardio & Aeróbico</span>
+        </button>
+      </nav>
+
+      <!-- 3. BARRA DE GAMIFICACIÓN — Sesiones & Consistencia -->
+      <section id="gamificationBar" class="gamification-bar" aria-label="Panel de progreso y logros">
+        <div class="gamification-top">
+          <!-- Sesiones finalizadas (reemplaza "Racha") -->
+          <div class="sessions-pill" id="sessionsPill">
+            <span class="sessions-icon">🎯</span>
+            <div class="sessions-info">
+              <span id="totalSessionsText" class="sessions-count">0</span>
+              <span class="sessions-label">Sesiones Finalizadas</span>
+            </div>
+          </div>
+          <div id="athleteLevelBadge" class="athlete-level-badge">
+            <span id="athleteLevelIcon">⚡</span>
+            <span id="athleteLevelTitle">Iniciando...</span>
+          </div>
+        </div>
+
+        <!-- Métricas de volumen / minutos -->
+        <div class="gamification-metrics-row">
+          <div class="gam-metric-card">
+            <span id="totalVolumeText" class="gam-metric-value">0 kg</span>
+            <span class="gam-metric-label">Volumen Total</span>
+          </div>
+          <div class="gam-metric-card">
+            <span id="totalMinutesText" class="gam-metric-value">0 min</span>
+            <span class="gam-metric-label">Minutos Entrenados</span>
+          </div>
+          <div class="gam-metric-card">
+            <span id="xpCurrentLabel" class="gam-metric-value">0 XP</span>
+            <span class="gam-metric-label">XP Acumulados</span>
+          </div>
+        </div>
+
+        <!-- Barra de XP -->
+        <div class="xp-progress-container">
+          <div class="xp-labels">
+            <span id="xpLevelLabel">Nivel 1</span>
+            <span id="xpNextLabel">Siguiente: 300 XP</span>
+          </div>
+          <div class="xp-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div id="xpFillBar" class="xp-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Badges motivacionales — layout wrap, SIN scroll horizontal -->
+        <div id="badgesContainer" class="badges-container" aria-label="Logros desbloqueados"></div>
+      </section>
+
+      <!-- 4. PLANIFICADOR SEMANAL — Vacío por defecto -->
+      <section class="calendar-section" aria-label="Planificador semanal">
+        <div class="calendar-header">
+          <span class="calendar-title">📅 Planificador Semanal</span>
+          <span id="currentDateText" class="calendar-date-text">Cargando...</span>
+        </div>
+        <div id="calendarWeekGrid" class="calendar-week-grid" role="grid" aria-label="Semana actual">
+          <!-- 7 días generados dinámicamente — vacíos por defecto -->
+        </div>
+      </section>
+
+      <!-- 5. PANEL DE CARDIO & AERÓBICO (módulo independiente) -->
+      <section id="cardioPanel" class="cardio-panel hidden" aria-label="Módulo de cardio" role="tabpanel">
+        <div class="panel-section-header">
+          <h2 class="panel-title cardio-title">🏃 Sesión de Cardio en Tiempo Real</h2>
+          <span class="panel-subtitle">Medición aeróbica & RPE</span>
+        </div>
+
+        <!-- Selector de Actividad Aeróbica -->
+        <div class="cardio-activity-selector" role="group" aria-label="Tipo de actividad">
+          <button class="btn-activity active" data-act="Carrera en Campo" id="actCarrera">🏃 Carrera</button>
+          <button class="btn-activity" data-act="Cinta de Correr" id="actCinta">🏃‍♂️ Cinta</button>
+          <button class="btn-activity" data-act="Ciclismo" id="actCiclismo">🚴 Ciclismo</button>
+          <button class="btn-activity" data-act="HIIT Aeróbico" id="actHIIT">⚡ HIIT</button>
+          <button class="btn-activity" data-act="Caminata" id="actCaminata">🚶 Caminata</button>
+        </div>
+
+        <!-- Cronómetro Digital Principal -->
+        <div class="cardio-timer-box">
+          <div class="cardio-timer-label">TIEMPO TRANSCURRIDO</div>
+          <div id="cardioDigits" class="cardio-digits tabular-nums">00:00</div>
+          <div class="cardio-timer-controls">
+            <button id="btnCardioStart" class="btn-cardio-action btn-cardio-start">▶ Iniciar</button>
+            <button id="btnCardioPause" class="btn-cardio-action btn-cardio-pause hidden">⏸ Pausar</button>
+            <button id="btnCardioReset" class="btn-cardio-action btn-cardio-stop">⏹ Reiniciar</button>
+          </div>
+        </div>
+
+        <!-- Métricas: Distancia, Ritmo, Calorías -->
+        <div class="cardio-metrics-grid">
+          <div class="metric-card">
+            <div class="metric-stepper-row">
+              <button id="btnDecDist" class="metric-stepper-btn" aria-label="Reducir distancia">−</button>
+              <span id="cardioDistanceVal" class="metric-val tabular-nums">3.50</span>
+              <button id="btnIncDist" class="metric-stepper-btn" aria-label="Aumentar distancia">+</button>
+            </div>
+            <span class="metric-lbl">Distancia (km)</span>
+          </div>
+          <div class="metric-card">
+            <span id="cardioPaceVal" class="metric-val tabular-nums">--:--</span>
+            <span class="metric-lbl">Ritmo (min/km)</span>
+          </div>
+          <div class="metric-card">
+            <span id="cardioCaloriesVal" class="metric-val tabular-nums">0</span>
+            <span class="metric-lbl">Calorías Est.</span>
+          </div>
+        </div>
+
+        <!-- Escala RPE -->
+        <div class="rpe-container">
+          <div class="rpe-header">
+            <span>Esfuerzo Percibido (RPE 1-10):</span>
+            <span id="rpeValueText" style="color:var(--accent-amber); font-weight:800;">7 — Intenso</span>
+          </div>
+          <input type="range" id="rpeRangeInput" class="rpe-slider" min="1" max="10" value="7" aria-label="Escala de esfuerzo percibido">
+        </div>
+
+        <button id="btnSaveCardioSession" class="btn-primary-glow btn-cardio-save">
+          🏁 Finalizar y Guardar Sesión de Cardio
+        </button>
+      </section>
+
+      <!-- 6. PANEL DE FUERZA & CALISTENIA (módulo principal) -->
+      <section id="strengthPanel" class="strength-panel" role="tabpanel">
+
+        <!-- Panel Analista Deportivo IA — tarjetas por ejercicio -->
+        <div class="analyst-card" id="analystCard">
+          <div class="analyst-header">
+            <span class="analyst-avatar">🤖</span>
+            <div class="analyst-titles">
+              <h3 class="analyst-name">Analista Deportivo IA</h3>
+              <p class="analyst-subtitle">Sugerencias de tensión mecánica & recuperación</p>
+            </div>
+          </div>
+          <div class="analyst-body" id="analystMessage">
+            <p class="analyst-empty-state">Selecciona o crea una rutina para ver el análisis biomecánico personalizado por ejercicio.</p>
+          </div>
+        </div>
+
+        <!-- Selector de Modo de Entrenamiento -->
+        <div class="workout-mode-section">
+          <div class="workout-mode-header">
+            <span class="workout-mode-label">⚙️ Modo de Entrenamiento</span>
+            <span class="workout-mode-help" id="workoutModeHelp">Serie por Serie</span>
+          </div>
+          <div class="workout-mode-selector" role="group" aria-label="Modo de entrenamiento">
+            <button id="btnModeTraditional" class="mode-btn mode-btn-active" data-mode="traditional">
+              <span class="mode-btn-icon">📋</span>
+              <div class="mode-btn-content">
+                <strong>Tradicional</strong>
+                <small>Completa todas las series de un ejercicio antes de pasar al siguiente</small>
+              </div>
+            </button>
+            <button id="btnModeCircuit" class="mode-btn" data-mode="circuit">
+              <span class="mode-btn-icon">🔄</span>
+              <div class="mode-btn-content">
+                <strong>Circuito</strong>
+                <small>1 serie de cada ejercicio por ronda. Descanso al finalizar la ronda completa</small>
+              </div>
+            </button>
+          </div>
+
+          <!-- Indicador de Ronda Activa (solo visible en modo circuito) -->
+          <div id="circuitRoundIndicator" class="circuit-round-indicator hidden">
+            <span>🔄 Ronda</span>
+            <span id="currentRoundNum" class="circuit-round-num">1</span>
+            <span id="circuitRoundOf" class="circuit-round-total">/ ? rondas</span>
+            <div id="circuitExerciseProgress" class="circuit-ex-progress"></div>
+          </div>
+        </div>
+
+        <!-- Selector de Rutinas (Tabs) -->
+        <div class="routine-tabs-wrapper">
+          <div class="routine-tabs" id="routineTabs" role="tablist" aria-label="Rutinas guardadas">
+            <!-- tabs dinámicos -->
+          </div>
+          <div class="routine-management-actions">
+            <button id="btnEditCurrentRoutine" class="btn-edit-tab" title="Editar Rutina Activa">
+              ✏️ Editar
+            </button>
+            <button id="btnDeleteCurrentRoutine" class="btn-delete-tab" title="Eliminar Rutina Actual">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <!-- Stream de Ejercicios -->
+        <main id="activeRoutineContainer" class="routine-container" aria-live="polite">
+          <!-- Renderizado dinámico -->
+        </main>
+      </section>
+
+      <!-- 7. BARRA INFERIOR FIJA (Modo Fuerza) -->
+      <div id="actionBarStrength" class="action-bar-bottom">
+        <button id="btnStartWorkout" class="btn-primary-glow">
+          ▶ Iniciar rutina seleccionada
+        </button>
+        <button id="btnFinishWorkout" class="btn-primary-glow">
+          🏁 Finalizar y Guardar Entrenamiento de Fuerza
+        </button>
+      </div>
+
+      <!-- ======================================================
+           MODALES
+           ====================================================== -->
+
+      <!-- MODAL 1: Creador y Editor de Rutinas -->
+      <div id="modalNewRoutine" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalRoutineTitle">
+        <div class="modal-card modal-large">
+          <div class="modal-header">
+            <h3 id="modalRoutineTitle">Diseñador de Rutinas Pro</h3>
+            <button id="btnCloseModal" class="btn-close" aria-label="Cerrar modal">×</button>
+          </div>
+
+
+          <div class="form-group">
+            <label for="newRoutineName">Nombre de la Rutina:</label>
+            <input type="text" id="newRoutineName" placeholder="Ej. Día A — Fuerza, Torso Empuje..." />
+          </div>
+
+          <fieldset class="form-group weekday-fieldset">
+            <legend>¿Qué días quieres entrenar esta rutina?</legend>
+            <p class="help-text">Se añadirá automáticamente a cada día elegido, todas las semanas.</p>
+            <div id="newRoutineWeekdays" class="weekday-picker" role="group" aria-label="Días de entrenamiento">
+              <label><input type="checkbox" value="0"> <span>Lun</span></label>
+              <label><input type="checkbox" value="1"> <span>Mar</span></label>
+              <label><input type="checkbox" value="2"> <span>Mié</span></label>
+              <label><input type="checkbox" value="3"> <span>Jue</span></label>
+              <label><input type="checkbox" value="4"> <span>Vie</span></label>
+              <label><input type="checkbox" value="5"> <span>Sáb</span></label>
+              <label><input type="checkbox" value="6"> <span>Dom</span></label>
+            </div>
+          </fieldset>
+
+          <div class="form-group">
+            <label for="muscleGroupFilter">Filtrar Catálogo por Grupo Muscular:</label>
+            <select id="muscleGroupFilter">
+              <option value="Todos">Todos los Grupos Musculares</option>
+              <option value="Pecho">Pecho</option>
+              <option value="Espalda">Espalda</option>
+              <option value="Piernas">Piernas</option>
+              <option value="Hombros">Hombros</option>
+              <option value="Brazos">Brazos</option>
+              <option value="Core">Core</option>
+            </select>
+          </div>
+
+          <div class="routine-section-header">
+            <div>
+              <h4 class="section-subtitle">Ejercicios de la Rutina</h4>
+              <p class="help-text">Inserta (+), reordena (▲/▼) y elimina (🗑️) ejercicios libremente.</p>
+            </div>
+          </div>
+
+          <div id="newExercisesList" class="exercises-input-list">
+            <!-- Filas dinámicas -->
+          </div>
+
+          <button id="btnAddExerciseRow" class="btn-secondary-sm btn-full" style="margin-top: 10px;">
+            + Añadir Ejercicio al Final de la Lista
+          </button>
+
+          <div class="modal-actions">
+            <button id="btnCancelRoutine" class="btn-secondary">Cancelar</button>
+            <button id="btnSaveRoutine" class="btn-primary">💾 Guardar Rutina</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL 2: Guía Técnica de Ejercicio -->
+      <div id="modalExerciseGuide" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="guideExTitle">
+        <div class="modal-card modal-medium">
+          <div class="modal-header">
+            <h3 id="guideExTitle">Técnica de Ejercicio</h3>
+            <button id="btnCloseGuide" class="btn-close" aria-label="Cerrar guía">×</button>
+          </div>
+          <div class="guide-body">
+            <img id="guideExImage" src="" alt="Demostración técnica del ejercicio" class="exercise-demo-img" />
+            <div class="benefit-box">
+              <h4>💡 Razón Biomecánica & Beneficio:</h4>
+              <p id="guideExBenefit"></p>
+            </div>
+            <div class="technique-box">
+              <h4>📋 Ejecución Técnica Correcta:</h4>
+              <ol id="guideExSteps"></ol>
+            </div>
+            <div class="warning-box">
+              <h4>⚠️ Errores Comunes a Evitar:</h4>
+              <ul id="guideExErrors"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL 3: Temporizador de Descanso -->
+      <div id="timerOverlay" class="timer-overlay hidden" role="dialog" aria-modal="true" aria-label="Temporizador de descanso">
+        <div class="timer-card">
+          <div class="timer-title" id="timerTitle">DESCANSO ENTRE SERIES</div>
+          <div id="timerCountdown" class="timer-digits tabular-nums">01:30</div>
+          <div class="timer-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div id="timerProgressFill" class="progress-fill"></div>
+          </div>
+          <div class="timer-buttons">
+            <button id="btnAdd15s" class="btn-sm">+15s</button>
+            <button id="btnSkipRest" class="btn-sm btn-accent">Saltar Descanso</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL 4: Importador Inteligente -->
+      <div id="modalSmartImport" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+        <div class="modal-card modal-large">
+          <div class="modal-header">
+            <h3 id="importModalTitle">📥 Importar Rutina desde Texto o WhatsApp</h3>
+            <button id="btnCloseImport" class="btn-close" aria-label="Cerrar importador">×</button>
+          </div>
+
+          <p class="help-text">Pega el mensaje de WhatsApp, bloc de notas o texto libre con tu rutina para convertirla automáticamente.</p>
+
+          <div style="margin-top: 4px;">
+            <button id="btnLoadUserWppPreset" class="btn-secondary-sm" style="border-color:var(--accent-emerald); color:var(--accent-emerald);">
+              ⚡ Cargar Ejemplo de Chat WhatsApp
+            </button>
+          </div>
+
+          <div class="form-group" style="margin-top:10px;">
+            <label for="importTextContent">Pega aquí tu texto o mensaje de chat:</label>
+            <textarea id="importTextContent" class="import-textarea" placeholder="Ejemplo:&#10;Día A — Fuerza&#10;* Diamante: 5 × 12–20&#10;* Pseudo-planche: 5 × 6–12&#10;* Archer: 4 × 8–12 por lado..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>O sube una imagen / foto de tu rutina:</label>
+            <div class="dropzone" id="dropzoneImage" tabindex="0" role="button" aria-label="Zona de carga de imagen">
+              <span style="font-size:1.4rem;">📷</span>
+              <p style="font-size:0.85rem; color:var(--text-subtle); margin-top:4px;">Arrastra una foto o captura, o haz clic para seleccionar</p>
+              <input type="file" id="importFileInput" accept="image/*,.txt" style="display:none;" aria-label="Seleccionar archivo de imagen o texto">
+            </div>
+          </div>
+
+          <h4 class="section-subtitle" style="margin-top:8px;">Vista Previa de Rutinas Detectadas</h4>
+          <div id="importPreviewContainer" class="preview-cards-container">
+            <p style="font-size:0.8rem; color:var(--text-muted);">Pega un texto para ver la vista previa...</p>
+          </div>
+
+          <div class="modal-actions">
+            <button id="btnCancelImport" class="btn-secondary">Cancelar</button>
+            <button id="btnConfirmImport" class="btn-primary" style="background:var(--accent-emerald);">
+              📥 Importar y Guardar Rutinas
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL 5: Resumen Post-Entrenamiento -->
+      <div id="modalPostWorkoutSummary" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Resumen del entrenamiento">
+        <div class="modal-card modal-medium summary-card">
+          <div class="summary-trophy">🏆</div>
+          <h2 class="summary-title">¡Entrenamiento Completado!</h2>
+          <p class="summary-subtitle">Excelente trabajo. Sesión guardada correctamente.</p>
+
+          <div class="summary-stats-grid">
+            <div class="stat-box">
+              <span id="summaryVolume" class="stat-value tabular-nums">0 kg</span>
+              <span class="stat-label">Volumen Total</span>
+            </div>
+            <div class="stat-box">
+              <span id="summarySets" class="stat-value tabular-nums">0</span>
+              <span class="stat-label">Series / Min</span>
+            </div>
+            <div class="stat-box">
+              <span id="summaryXP" class="stat-value tabular-nums">+0 XP</span>
+              <span class="stat-label">Experiencia</span>
+            </div>
+          </div>
+
+          <div class="summary-sessions-row">
+            🎯 Total de Sesiones Finalizadas: <strong id="summarySessionsText" style="color:var(--accent-emerald);">0</strong>
+          </div>
+
+          <button id="btnCloseSummary" class="btn-primary btn-full" style="margin-top: 10px;">
+            Continuar al Dashboard
+          </button>
+        </div>
+      </div>
+
+      <!-- MODAL 6: Asignación de Día del Planificador (NUEVO) -->
+      <div id="modalDayAssign" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="dayAssignTitle">
+        <div class="modal-card modal-day-assign">
+          <div class="modal-header">
+            <h3 id="dayAssignTitle">📅 Planificar Día</h3>
+            <button id="btnCloseDayAssign" class="btn-close" aria-label="Cerrar planificador">×</button>
+          </div>
+
+          <p id="dayAssignSubtitle" class="day-assign-subtitle">Selecciona qué hacer este día</p>
+
+          <div class="day-assign-options">
+            <div id="scheduledWorkoutActions" class="scheduled-workout-actions hidden"></div>
+            <!-- Opción 1: Cargar Rutina Guardada -->
+            <div class="day-assign-option-group">
+              <label for="dayAssignRoutineSelect" class="day-assign-option-label">🏋️ Rutina de fuerza o calistenia</label>
+              <select id="dayAssignRoutineSelect" class="day-assign-select">
+                <option value="">— Seleccionar Rutina Guardada —</option>
+                <!-- Opciones dinámicas desde routineManager -->
+              </select>
+              <label class="repeat-option"><input id="dayAssignRepeatWeekly" type="checkbox"> <span>Repetir cada semana este día</span></label>
+              <button id="btnAssignRoutineToDay" class="btn-primary btn-full">
+                ✓ Guardar en el planificador
+              </button>
+            </div>
+
+            <div class="day-assign-divider">
+              <span>— o —</span>
+            </div>
+
+            <!-- Opción 2: Sesión de Cardio -->
+            <div class="day-assign-option-group">
+              <label class="day-assign-option-label">🏃 Sesión de cardio</label>
+              <label class="repeat-option"><input id="dayAssignCardioRepeatWeekly" type="checkbox"> <span>Repetir cada semana este día</span></label>
+              <button id="btnAssignCardioToDay" class="btn-cardio-assign btn-full">
+                🏃 Guardar cardio en el planificador
+              </button>
+            </div>
+          </div>
+
+          <!-- Acciones de gestión -->
+          <div class="day-assign-footer">
+            <button id="btnClearDayAssign" class="btn-clear-day">
+              🗑️ Dejar esta fecha libre
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /#app -->
+
+    <!-- MÓDULOS JS DESACOPLADOS -->
+    <script src="js/db.js"></script>
+    <script src="js/catalog.js"></script>
+    <script src="js/routines.js"></script>
+    <script src="js/cardio.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/gamification.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "name": "aurafit-workout-tracker",
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" }
+  ]
+}
