@@ -143,13 +143,17 @@
 
         <!-- Métricas: Distancia, Ritmo, Calorías -->
         <div class="cardio-metrics-grid">
-          <div class="metric-card">
+          <div class="metric-card metric-card-input metric-card-distance">
+            <span class="metric-card-title">Distancia</span>
             <div class="metric-stepper-row">
               <button id="btnDecDist" class="metric-stepper-btn" aria-label="Reducir distancia">−</button>
-              <span id="cardioDistanceVal" class="metric-val tabular-nums">3.50</span>
+              <div class="metric-number-field">
+                <input id="cardioDistanceInput" class="metric-distance-input tabular-nums" type="number" min="0.01" max="999.99" step="0.01" value="3.50" inputmode="decimal" aria-label="Distancia exacta en kilómetros">
+                <span>km</span>
+              </div>
               <button id="btnIncDist" class="metric-stepper-btn" aria-label="Aumentar distancia">+</button>
             </div>
-            <span class="metric-lbl">Distancia (km)</span>
+            <span class="metric-lbl">Puedes escribir el valor exacto</span>
           </div>
           <div class="metric-card">
             <span id="cardioPaceVal" class="metric-val tabular-nums">--:--</span>
@@ -157,7 +161,15 @@
           </div>
           <div class="metric-card">
             <span id="cardioCaloriesVal" class="metric-val tabular-nums">0</span>
-            <span class="metric-lbl">Calorías Est.</span>
+            <span class="metric-lbl">Calorías estimadas</span>
+          </div>
+          <div class="metric-card metric-card-input">
+            <span class="metric-card-title">Peso corporal</span>
+            <div class="metric-number-field metric-weight-field">
+            <input id="cardioWeightInput" class="metric-distance-input tabular-nums" type="number" min="30" max="250" step="0.1" value="72" inputmode="decimal" aria-label="Peso corporal en kilogramos">
+              <span>kg</span>
+            </div>
+            <span class="metric-lbl">Para estimar calorías</span>
           </div>
         </div>
 
@@ -298,6 +310,8 @@
               <option value="Brazos">Brazos</option>
               <option value="Core">Core</option>
             </select>
+            <p id="exerciseSuggestionHelp" class="exercise-suggestion-help">Elige un grupo y, al escribir un ejercicio, verás sugerencias. También puedes escribir cualquier nombre personalizado.</p>
+            <datalist id="exerciseSuggestions"></datalist>
           </div>
 
           <div class="routine-section-header">
@@ -457,7 +471,7 @@
                 <option value="">— Seleccionar Rutina Guardada —</option>
                 <!-- Opciones dinámicas desde routineManager -->
               </select>
-              <label class="repeat-option"><input id="dayAssignRepeatWeekly" type="checkbox"> <span>Repetir cada semana este día</span></label>
+              <label class="repeat-option"><input id="dayAssignRepeatWeekly" type="checkbox"> <span id="dayAssignRepeatStrengthLabel">Repetir cada semana este día</span></label>
               <button id="btnAssignRoutineToDay" class="btn-primary btn-full">
                 ✓ Guardar en el planificador
               </button>
@@ -470,7 +484,7 @@
             <!-- Opción 2: Sesión de Cardio -->
             <div class="day-assign-option-group">
               <label class="day-assign-option-label">🏃 Sesión de cardio</label>
-              <label class="repeat-option"><input id="dayAssignCardioRepeatWeekly" type="checkbox"> <span>Repetir cada semana este día</span></label>
+              <label class="repeat-option"><input id="dayAssignCardioRepeatWeekly" type="checkbox"> <span id="dayAssignRepeatCardioLabel">Repetir cada semana este día</span></label>
               <button id="btnAssignCardioToDay" class="btn-cardio-assign btn-full">
                 🏃 Guardar cardio en el planificador
               </button>

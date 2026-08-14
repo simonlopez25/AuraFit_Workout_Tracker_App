@@ -1,7 +1,13 @@
 {
   "version": 2,
   "name": "aurafit-workout-tracker",
-  "builds": [
-    { "src": "index.html", "use": "@vercel/static" }
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    }
   ]
 }

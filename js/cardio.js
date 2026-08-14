@@ -14,6 +14,7 @@ class CardioManager {
 
     this.selectedActivity = "Carrera en Campo";
     this.distanceKm = 3.5;
+    this.weightKg = 72;
     this.rpeValue = 7;
     this.laps = [];
 
@@ -92,9 +93,9 @@ class CardioManager {
   calculatePace(distanceKm, totalSeconds = this.getTotalElapsedSeconds()) {
     if (!distanceKm || distanceKm <= 0 || totalSeconds <= 0) return "--:--";
 
-    const paceSecondsTotal = totalSeconds / distanceKm;
+    const paceSecondsTotal = Math.round(totalSeconds / distanceKm);
     const paceMins = Math.floor(paceSecondsTotal / 60);
-    const paceSecs = Math.round(paceSecondsTotal % 60);
+    const paceSecs = paceSecondsTotal % 60;
 
     return `${paceMins}:${paceSecs.toString().padStart(2, "0")}`;
   }
@@ -128,7 +129,7 @@ class CardioManager {
   /**
    * Estima calorías quemadas según MET de la actividad, peso corporal y duración
    */
-  estimateCalories(activity, distanceKm, durationMins = (this.getTotalElapsedSeconds() / 60)) {
+  estimateCalories(activity, durationMins = (this.getTotalElapsedSeconds() / 60), weightKg = this.weightKg) {
     let met = 8.5;
     const act = (activity || this.selectedActivity).toLowerCase();
 
@@ -137,9 +138,8 @@ class CardioManager {
     if (act.includes("hiit")) met = 11.5;
     if (act.includes("carrera") || act.includes("cinta")) met = 10.0;
 
-    const weightKg = 72; // Estándar atlético
     const hours = durationMins / 60;
-    return Math.round(met * weightKg * hours);
+    return Math.round(met * Math.max(30, Number(weightKg) || 72) * hours);
   }
 
   /**
@@ -195,13 +195,13 @@ class CardioManager {
       activity: data.activity || this.selectedActivity,
       durationSeconds: totalSeconds,
       formattedTime: this.formatTimeMs(totalSeconds * 1000),
-      distanceKm: parseFloat(data.distanceKm) || this.distanceKm,
-      speedKmH: this.getSpeedKmH(totalSeconds, parseFloat(data.distanceKm) || this.distanceKm),
-      paceMinKm: this.calculatePace(parseFloat(data.distanceKm) || this.distanceKm, totalSeconds),
-      caloriesBurned: this.estimateCalories(data.activity || this.selectedActivity, parseFloat(data.distanceKm) || this.distanceKm, totalSeconds / 60),
-      rpe: parseInt(data.rpe) || this.rpeValue,
-      zone: this.getZoneInfo(parseInt(data.rpe) || this.rpeValue),
-      laps: this.laps
+      distanceKm: Math.max(0.01, Number(data.distanceKm) || this.distanceKm),
+      speedKmH: this.getSpeedKmH(totalSeconds, Math.max(0.01, Number(data.distanceKm) || this.distanceKm)),
+      paceMinKm: this.calculatePace(Math.max(0.01, Number(data.distanceKm) || this.distanceKm), totalSeconds),
+      caloriesBurned: this.estimateCalories(data.activity || this.selectedActivity, totalSeconds / 60, data.weightKg || this.weightKg),
+      rpe: Math.min(10, Math.max(1, Number(data.rpe) || this.rpeValue)),
+      zone: this.getZoneInfo(Math.min(10, Math.max(1, Number(data.rpe) || this.rpeValue))),
+      laps: [...this.laps]
     };
 
     await dbAdapter.logWorkoutSession({ type: "cardio", ...session });

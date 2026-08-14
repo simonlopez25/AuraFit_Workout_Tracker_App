@@ -1,8 +1,3 @@
-/**
- * AuraFit Pro — Inter-set Rest Timer Module
- * Administra el temporizador entre series con sintetizador Web Audio API,
- * controles de incremento (+15s) y salto inmediato.
- */
 
 class RestTimer {
   constructor() {

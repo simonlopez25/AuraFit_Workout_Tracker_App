@@ -531,34 +531,69 @@ body {
   color: #FFF;
 }
 
-/* Cardio Metrics Input & SLiders (4 Column Grid) */
+/* Métricas de cardio: los controles manuales tienen espacio suficiente en cualquier pantalla. */
 .cardio-metrics-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 @media (max-width: 540px) {
   .cardio-metrics-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 }
 
 .metric-card {
   background: var(--surface-glass-2);
   border: 1px solid var(--border-glass);
-  padding: 12px 6px;
+  min-height: 118px;
+  padding: 14px;
   border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: center;
+  gap: 7px;
   text-align: center;
 }
+
+.metric-card-input { text-align: left; }
+.metric-card-title { color: var(--text-subtle); font-size: .72rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+.metric-stepper-row { display: grid; grid-template-columns: 42px minmax(0, 1fr) 42px; align-items: center; gap: 8px; }
+.metric-stepper-btn { width: 42px; height: 42px; border: 1px solid var(--border-glass); border-radius: 10px; background: var(--bg-abyssal); color: var(--accent-amber); font-size: 1.35rem; font-weight: 800; cursor: pointer; transition: var(--transition-cubic); }
+.metric-stepper-btn:hover { border-color: var(--accent-amber); background: rgba(245, 158, 11, .12); }
+.metric-number-field { display: flex; align-items: center; min-width: 0; height: 42px; padding: 0 11px; border: 1px solid var(--border-glass); border-radius: 10px; background: var(--bg-abyssal); }
+.metric-number-field:focus-within { border-color: var(--accent-amber); box-shadow: 0 0 0 3px rgba(245, 158, 11, .12); }
+.metric-number-field > span { color: var(--text-muted); font-size: .78rem; font-weight: 800; }
+.metric-weight-field { max-width: 176px; }
 
 .metric-val {
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--accent-amber);
+}
+
+.metric-distance-input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--accent-amber);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.metric-distance-input:focus {
+  box-shadow: none;
+}
+
+.metric-distance-input::-webkit-inner-spin-button,
+.metric-distance-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .metric-lbl {
@@ -1090,6 +1125,21 @@ body {
   font-size: 0.82rem;
   font-weight: 800;
   color: var(--text-subtle);
+}
+
+.exercise-suggestion-help {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: .77rem;
+  line-height: 1.45;
+}
+
+.draft-name[list] {
+  background-image: linear-gradient(45deg, transparent 50%, var(--accent-cyan) 50%), linear-gradient(135deg, var(--accent-cyan) 50%, transparent 50%);
+  background-position: calc(100% - 15px) 50%, calc(100% - 10px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 28px;
 }
 
 .form-group input,

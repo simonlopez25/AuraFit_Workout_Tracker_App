@@ -36,10 +36,16 @@ class CalendarManager {
   getScheduledForDate(isoDate, dayIndex) {
     const specific = this.scheduleMap[isoDate];
     if (specific?.type === "rest") return null;
-    return specific || this.weeklyMap[dayIndex] || null;
+    if (specific) return { ...specific, recurring: false };
+    const recurring = this.weeklyMap[dayIndex];
+    return recurring ? { ...recurring, recurring: true } : null;
   }
   assignStrengthToDay(isoDate, routineId) { if (routineId) this.scheduleMap[isoDate] = { type: "strength", routineId }; this.persist(); }
-  assignStrengthWeekly(dayIndex, routineId) { if (routineId) this.weeklyMap[dayIndex] = { type: "strength", routineId }; this.persist(); }
+  assignStrengthWeekly(dayIndex, routineId, isoDate = null) {
+    if (routineId) this.weeklyMap[dayIndex] = { type: "strength", routineId };
+    if (isoDate) delete this.scheduleMap[isoDate];
+    this.persist();
+  }
   replaceRoutineWeeklyAssignments(routineId, dayIndexes = []) {
     Object.keys(this.weeklyMap).forEach(dayIndex => {
       if (this.weeklyMap[dayIndex]?.type === "strength" && this.weeklyMap[dayIndex].routineId === routineId) delete this.weeklyMap[dayIndex];
@@ -57,7 +63,11 @@ class CalendarManager {
     this.persist();
   }
   assignCardioToDay(isoDate, activity = "Carrera") { this.scheduleMap[isoDate] = { type: "cardio", activity }; this.persist(); }
-  assignCardioWeekly(dayIndex, activity = "Carrera") { this.weeklyMap[dayIndex] = { type: "cardio", activity }; this.persist(); }
+  assignCardioWeekly(dayIndex, activity = "Carrera", isoDate = null) {
+    this.weeklyMap[dayIndex] = { type: "cardio", activity };
+    if (isoDate) delete this.scheduleMap[isoDate];
+    this.persist();
+  }
   clearDay(isoDate) { this.scheduleMap[isoDate] = { type: "rest" }; delete this.completedDaysMap[isoDate]; this.persist(); }
   markCompleted(isoDate, sessionData) { this.completedDaysMap[isoDate] = { ...sessionData, completedAt: new Date().toISOString() }; this.persist(); }
 }
