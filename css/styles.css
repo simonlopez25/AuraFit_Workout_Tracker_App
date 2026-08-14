@@ -1867,11 +1867,13 @@ html, body { overflow-x: hidden; scrollbar-width: none; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  /* Keep the brand and the complete action cluster inside the viewport. */
+  padding: 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   gap: 12px;
   position: relative;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .brand {
@@ -1910,11 +1912,12 @@ html, body { overflow-x: hidden; scrollbar-width: none; }
 
 .header-actions {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   justify-content: flex-end;
-  flex-shrink: 0;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .btn-header-cta {
@@ -2043,7 +2046,12 @@ html, body { overflow-x: hidden; scrollbar-width: none; }
     display: none;
   }
   .app-header {
-    gap: 6px;
+    gap: 12px;
+    padding: 10px;
+  }
+  .header-actions {
+    flex-basis: 100%;
+    justify-content: flex-end;
   }
   .brand {
     font-size: 1.15rem;
@@ -2795,7 +2803,7 @@ html, body { overflow-x: hidden; scrollbar-width: none; }
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-main);
-  max-width: 120px;
+  max-width: 88px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2804,7 +2812,20 @@ html, body { overflow-x: hidden; scrollbar-width: none; }
 
 @media (max-width: 600px) {
   .user-pill-email {
-    max-width: 68px;
+    display: none;
+  }
+
+  .header-user-pill {
+    gap: 4px;
+    padding: 4px 5px;
+  }
+
+  .logout-text {
+    display: none;
+  }
+
+  .btn-header-cta {
+    padding: 8px 12px !important;
   }
 }
 
