@@ -11,7 +11,11 @@ class RoutineManager {
     await dbAdapter.saveRoutines(this.routines);
     return clean;
   }
-  async deleteRoutine(id) { this.routines = this.routines.filter(routine => routine.id !== id); await dbAdapter.saveRoutines(this.routines); }
+  async deleteRoutine(id) {
+    this.routines = this.routines.filter(routine => routine.id !== id);
+    await dbAdapter.deleteRoutineById(id);
+    await dbAdapter.saveRoutines(this.routines);
+  }
   id(prefix) { return `${prefix}-${Date.now()}-${crypto.getRandomValues(new Uint32Array(1))[0].toString(36)}`; }
 }
 class SmartRoutineParser {
