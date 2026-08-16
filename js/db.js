@@ -201,7 +201,7 @@ class DatabaseAdapter {
     // Check if cloud already has data
     const { data: existing } = await this._sb
       .from("routines")
-      .select("id")
+      .select("id, data")
       .eq("user_id", this._uid);
 
     const existingIds = new Set((existing || []).map(r => r.id));

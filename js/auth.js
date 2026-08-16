@@ -23,8 +23,14 @@ class AuthManager {
     }
 
     // Restore existing session
-    const user = await getCurrentUser();
-    this.currentUser = user;
+    try {
+      const user = await getCurrentUser();
+      this.currentUser = user;
+    } catch (error) {
+      // Keep the app usable offline if Supabase is temporarily unavailable.
+      console.warn("[Auth] Unable to restore the Supabase session.", error);
+      this.currentUser = null;
+    }
 
     // Subscribe to future auth state changes
     window.supabaseClient.auth.onAuthStateChange((_event, session) => {
