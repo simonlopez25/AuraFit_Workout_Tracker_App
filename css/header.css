@@ -1,0 +1,222 @@
+/* ==========================================================================
+   AuraFit Pro — Dark Cyber-Performance SaaS Design System
+   Módulo CSS: header
+   (Fragmento dividido de styles.css — no editar a mano, usar scripts/split-css.js)
+   ========================================================================== */
+
+/* ==========================================================================
+   HEADER & SAAS CLOUD BADGE — Premium glassmorphism
+   ========================================================================== */
+/* NOTE: The overriding definitions live further down at line ~1626.
+   This block keeps the old fallback; the override takes precedence. */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.brand-icon {
+  background: linear-gradient(135deg, #00d2ff, var(--accent-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(0,210,255,0.5));
+}
+
+.brand-name {
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.highlight-cyber {
+  color: #00d2ff;
+  text-shadow: 0 0 12px rgba(0,210,255,0.5);
+}
+
+/* PRO badge next to brand name */
+.saas-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: #070A0F;
+  background: linear-gradient(135deg, #00d2ff, #0284c7);
+  padding: 1px 6px;
+  border-radius: 4px;
+  vertical-align: middle;
+  line-height: 1.6;
+  box-shadow: 0 0 8px rgba(0,210,255,0.45);
+}
+
+.cloud-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--accent-emerald);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+/* Form inputs used inside modals */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.form-input {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 12px 14px;
+  outline: none;
+  transition: var(--transition-cubic);
+  width: 100%;
+}
+
+.form-input:focus {
+  border-color: #00d2ff;
+  box-shadow: 0 0 0 3px rgba(0,210,255,0.15);
+  background: rgba(0,0,0,0.5);
+}
+
+.form-hint {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #00d2ff, #0284c7);
+  color: #070A0F;
+  font-weight: 800;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-cubic);
+  box-shadow: 0 0 16px rgba(0,210,255,0.35);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 24px rgba(0,210,255,0.55);
+  transform: translateY(-1px);
+}
+
+.btn-full {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+}
+
+.btn-secondary-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--surface-glass-2);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.84rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-cubic);
+  white-space: nowrap;
+}
+
+.btn-secondary-sm:hover {
+  border-color: rgba(0,210,255,0.4);
+  background: rgba(255,255,255,0.08);
+}
+
+/* ==========================================================================
+   NAVIGATION MODULE SWITCHER (FORTALEZA VS CARDIO)
+   ========================================================================== */
+.module-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: var(--surface-glass-1);
+  padding: 6px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(12px);
+}
+
+.module-btn {
+  min-height: var(--touch-target-min);
+  background: transparent;
+  border: none;
+  color: var(--text-subtle);
+  font-weight: 800;
+  font-size: 0.9rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition-cubic);
+}
+
+.module-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.module-btn.active-strength {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0.05) 100%);
+  color: var(--accent-cyan);
+  border: 1px solid var(--accent-cyan);
+  box-shadow: 0 0 16px var(--accent-cyan-glow);
+}
+
+.module-btn.active-cardio {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+  color: var(--accent-pink);
+  border: 1px solid var(--accent-pink);
+  box-shadow: 0 0 16px var(--accent-cardio-glow);
+}

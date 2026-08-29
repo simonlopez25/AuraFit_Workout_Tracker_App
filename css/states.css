@@ -1,0 +1,135 @@
+/* ==========================================================================
+   AuraFit Pro — Dark Cyber-Performance SaaS Design System
+   Módulo CSS: states
+   (Fragmento dividido de styles.css — no editar a mano, usar scripts/split-css.js)
+   ========================================================================== */
+
+/* ==========================================================================
+   EMPTY STATE CARD
+   ========================================================================== */
+.empty-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 44px 20px;
+  background: var(--surface-glass-1);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  margin: 12px 0;
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-cyber);
+}
+
+.empty-icon {
+  font-size: 2.8rem;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 12px rgba(0, 210, 255, 0.35));
+}
+
+.empty-state-card h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.empty-state-card p {
+  font-size: 0.88rem;
+  color: var(--text-subtle);
+  max-width: 380px;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   MODERN GLASSMORPHISM & ACTIVE STATES POLISH (#00d2ff)
+   ========================================================================== */
+.module-btn.active-strength {
+  background: linear-gradient(135deg, rgba(0, 210, 255, 0.2) 0%, rgba(0, 210, 255, 0.05) 100%) !important;
+  color: #00d2ff !important;
+  border: 1px solid #00d2ff !important;
+  box-shadow: 0 0 16px rgba(0, 210, 255, 0.35) !important;
+}
+
+.mode-btn-active {
+  border-color: #00d2ff !important;
+  background: rgba(0, 210, 255, 0.12) !important;
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.25) !important;
+}
+
+.calendar-day-card {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 10px !important;
+  padding: 8px 4px !important;
+  transition: var(--transition-cubic) !important;
+}
+
+.calendar-day-card.today {
+  border-color: #00d2ff !important;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.25) !important;
+}
+
+/* Disabled state on bottom action bar button */
+.btn-primary-glow.btn-disabled, .btn-primary-glow:disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(0.6) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* ==========================================================================
+   PROFILE & BADGES MODAL
+   ========================================================================== */
+.profile-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px;
+  background: var(--surface-glass-2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+}
+
+.profile-avatar-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0, 210, 255, 0.2), rgba(236, 72, 153, 0.2));
+  border: 2px solid #00d2ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 0 16px rgba(0, 210, 255, 0.4);
+}
+
+.profile-level-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.profile-level-sub {
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 6px 0;
+}
+
+.section-divider::before, .section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}

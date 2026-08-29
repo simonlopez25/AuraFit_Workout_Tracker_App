@@ -1,0 +1,41 @@
+<!-- 10. MODAL DE AUTENTICACIÓN SUPABASE -->
+      <div id="modalAuth" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+        <div class="modal-card auth-modal-card">
+          <header class="modal-header">
+            <div>
+              <h2 id="authModalTitle" class="modal-title">☁️ Sincronización en la Nube</h2>
+              <p class="modal-subtitle">Guarda tus rutinas e historial de forma segura en Supabase</p>
+            </div>
+            <button id="btnCloseAuthModal" class="btn-close" aria-label="Cerrar ventana de autenticación">✕</button>
+          </header>
+
+          <div class="auth-tabs" role="tablist">
+            <button id="btnTabLogin" class="auth-tab-btn active" role="tab" aria-selected="true">Iniciar Sesión</button>
+            <button id="btnTabSignUp" class="auth-tab-btn" role="tab" aria-selected="false">Crear Cuenta</button>
+          </div>
+
+          <form id="authForm" class="auth-form" onsubmit="return false;">
+            <div id="authAlertMessage" class="auth-alert hidden"></div>
+
+            <div class="form-group">
+              <label for="authEmail" class="form-label">Correo Electrónico</label>
+              <input id="authEmail" type="email" class="form-input" placeholder="tu@email.com" required autocomplete="email" />
+            </div>
+
+            <div class="form-group">
+              <label for="authPassword" class="form-label">Contraseña</label>
+              <input id="authPassword" type="password" class="form-input" placeholder="••••••••" required minlength="6" autocomplete="current-password" />
+              <small id="authPasswordHint" class="form-hint hidden">Mínimo 6 caracteres.</small>
+            </div>
+
+            <button id="btnSubmitAuth" type="submit" class="btn-primary btn-full btn-auth-submit">
+              <span id="authSubmitText">Iniciar Sesión</span>
+              <span id="authSubmitSpinner" class="spinner-small hidden"></span>
+            </button>
+          </form>
+
+          <div class="auth-modal-footer">
+            <span class="auth-security-badge">🔒 Protección con Row Level Security (RLS)</span>
+          </div>
+        </div>
+      </div>

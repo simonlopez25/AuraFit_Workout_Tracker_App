@@ -4,6 +4,10 @@
   "description": "Intelligent Calisthenics & Weights Tracker App",
   "main": "index.html",
   "scripts": {
-    "start": "serve ."
+    "start": "serve .",
+    "build:html": "node scripts/build.js all",
+    "build:css": "node scripts/split-css.js",
+    "build": "npm run build:css && npm run build:html",
+    "verify": "node scripts/verify-ids.js && node scripts/verify-build.js"
   }
 }

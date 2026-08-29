@@ -1,0 +1,55 @@
+<!-- 6. PANEL DE FUERZA & CALISTENIA (módulo principal) -->
+      <section id="strengthPanel" class="strength-panel" role="tabpanel">
+
+        <!-- Selector de Modo de Entrenamiento -->
+        <div class="workout-mode-section">
+          <div class="workout-mode-header">
+            <span class="workout-mode-label">⚙️ Modo de Entrenamiento</span>
+            <span class="workout-mode-help" id="workoutModeHelp">Serie por Serie</span>
+          </div>
+          <div class="workout-mode-selector" role="group" aria-label="Modo de entrenamiento">
+            <button id="btnModeTraditional" class="mode-btn mode-btn-active" data-mode="traditional">
+              <span class="mode-btn-icon">📋</span>
+              <div class="mode-btn-content">
+                <strong>Tradicional</strong>
+                <small>Completa todas las series de un ejercicio antes de pasar al siguiente</small>
+              </div>
+            </button>
+            <button id="btnModeCircuit" class="mode-btn" data-mode="circuit">
+              <span class="mode-btn-icon">🔄</span>
+              <div class="mode-btn-content">
+                <strong>Circuito</strong>
+                <small>1 serie de cada ejercicio por ronda. Descanso al finalizar la ronda completa</small>
+              </div>
+            </button>
+          </div>
+
+          <!-- Indicador de Ronda Activa (solo visible en modo circuito) -->
+          <div id="circuitRoundIndicator" class="circuit-round-indicator hidden">
+            <span>🔄 Ronda</span>
+            <span id="currentRoundNum" class="circuit-round-num">1</span>
+            <span id="circuitRoundOf" class="circuit-round-total">/ ? rondas</span>
+            <div id="circuitExerciseProgress" class="circuit-ex-progress"></div>
+          </div>
+        </div>
+
+        <!-- Selector de Rutinas (Tabs) -->
+        <div class="routine-tabs-wrapper">
+          <div class="routine-tabs" id="routineTabs" role="tablist" aria-label="Rutinas guardadas">
+            <!-- tabs dinámicos -->
+          </div>
+          <div class="routine-management-actions">
+            <button id="btnEditCurrentRoutine" class="btn-edit-tab" title="Editar Rutina Activa">
+              ✏️ Editar
+            </button>
+            <button id="btnDeleteCurrentRoutine" class="btn-delete-tab" title="Eliminar Rutina Actual">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <!-- Stream de Ejercicios -->
+        <main id="activeRoutineContainer" class="routine-container" aria-live="polite">
+          <!-- Renderizado dinámico -->
+        </main>
+      </section>

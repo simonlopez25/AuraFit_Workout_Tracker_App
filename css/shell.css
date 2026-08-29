@@ -1,0 +1,282 @@
+/* ==========================================================================
+   AuraFit Pro — Shell de Escritorio (Sidebar + Layout Dashboard)
+   --------------------------------------------------------------------------
+   - Móvil (<1024px): la sidebar se oculta; se conserva el flujo original.
+   - Escritorio (>=1024px): sidebar fija a la izquierda y contenido fluido.
+   Capa ADITIVA: no modifica el flujo móvil.
+   ========================================================================== */
+
+.desktop-sidebar {
+  display: none;
+}
+
+/* ==========================================================================
+   LAYOUT DE ESCRITORIO (>=1024px)
+   ========================================================================== */
+@media (min-width: 1024px) {
+  /* El contenedor pasa a ocupar toda la zona derecha de la sidebar */
+  .app-container {
+    max-width: none;
+    margin-left: 280px;
+    padding: 20px 40px 140px;
+    gap: 14px;
+  }
+
+  /* ------------------- Sidebar fija a la izquierda ------------------- */
+  .desktop-sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    background: linear-gradient(180deg, rgba(11, 15, 23, 0.98), rgba(13, 18, 28, 0.96));
+    border-right: 1px solid var(--border-glass);
+    padding: 20px 14px;
+    overflow-y: auto;
+    z-index: 60;
+  }
+
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px 18px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    border-bottom: 1px solid var(--border-glass);
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 8px;
+    margin-bottom: 6px;
+  }
+
+  .sidebar-user-avatar {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    background: radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.25), rgba(56, 189, 248, 0.05));
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: var(--radius-full);
+  }
+
+  .sidebar-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .sidebar-user-name {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--text-main);
+  }
+
+  .sidebar-user-level {
+    font-size: 0.78rem;
+    color: var(--text-subtle);
+    font-weight: 600;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 11px 14px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--text-subtle);
+    font-size: 0.92rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: var(--transition-cubic);
+    min-height: 44px;
+  }
+
+  .sidebar-nav-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-main);
+  }
+
+  .sidebar-nav-item.is-active {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(56, 189, 248, 0.04));
+    border-color: rgba(56, 189, 248, 0.45);
+    color: var(--accent-cyan);
+    box-shadow: 0 0 14px var(--accent-cyan-glow);
+  }
+
+  .sidebar-nav-icon {
+    font-size: 1.1rem;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer {
+    padding: 14px 8px 4px;
+    border-top: 1px solid var(--border-glass);
+    margin-top: 10px;
+  }
+
+  .sidebar-version {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.4px;
+  }
+/* ------------------- Header: integrado al flujo ------------------- */
+  .app-header {
+    padding: 14px 18px;
+    border-radius: var(--radius-md);
+    background: var(--surface-glass-1);
+    border: 1px solid var(--border-glass);
+    backdrop-filter: blur(16px);
+    box-shadow: none;
+  }
+
+  /* Ocultar el botón ⋯ de "más opciones": la sidebar los cubre */
+  .header-more-wrap {
+    display: none !important;
+  }
+
+  /* Ocultar la marca duplicada del header en desktop */
+  .app-header .brand {
+    display: none;
+  }
+
+  /* El botón e icono de auth quedan a la derecha */
+  .header-actions {
+    justify-content: flex-end;
+    width: auto;
+    margin-left: auto;
+  }
+
+  /* ------------------- Paneles conectados (sin tarjetas sueltas) ------------------- */
+  .module-switcher,
+  .progress-banner-compact,
+  .gamification-bar,
+  .calendar-section,
+  .cardio-panel,
+  .strength-panel {
+    background: rgba(17, 24, 39, 0.6);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    backdrop-filter: blur(10px);
+    box-shadow: none;
+  }
+
+  .calendar-section {
+    padding: 14px;
+  }
+
+  .strength-panel,
+  .cardio-panel {
+    padding: 14px;
+  }
+
+  /* Contenedor de rutina: altura natural ampliada */
+  .routine-container {
+    max-height: none;
+  }
+/* ------------------- Barra contextual alineada al contenido ------------------- */
+  .context-action-bar {
+    left: auto;
+    right: 0;
+    transform: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 40px 20px;
+  }
+
+  .context-action-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 280px;
+    right: 0;
+    height: 1px;
+    background: var(--border-glass);
+  }
+
+  .context-action-row {
+    width: min(100%, 680px);
+  }
+
+  .context-timer-pill {
+    width: min(100%, 680px);
+  }
+
+  /* ------------------- Modales ------------------- */
+  .modal-card {
+    max-width: 640px;
+  }
+
+  .modal-card.modal-large {
+    max-width: 820px;
+  }
+
+  .modal-card.modal-medium {
+    max-width: 560px;
+  }
+
+  .modal-header {
+    padding: 20px 24px;
+  }
+
+  .modal-body,
+  .modal-content,
+  .modal-card > div:not(.modal-header) {
+    padding: 16px 24px;
+  }
+
+  .muscle-picker-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cardio-metrics-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .timer-card {
+    width: 420px;
+    padding: 32px;
+  }
+
+  .timer-digits {
+    font-size: 4rem;
+  }
+
+  /* ------------------- Botones grandes más cómodos ------------------- */
+  .btn-primary,
+  .btn-primary-glow,
+  .btn-cardio-start,
+  .btn-cardio-finish {
+    min-height: 52px;
+    font-size: 1rem;
+  }
+}
