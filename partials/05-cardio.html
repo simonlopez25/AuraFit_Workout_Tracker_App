@@ -1,0 +1,110 @@
+<!-- 5. PANEL DE CARDIO & AERÓBICO (Módulo independiente) -->
+      <section id="cardioPanel" class="cardio-panel hidden" aria-label="Módulo de cardio" role="tabpanel">
+        
+        <!-- VISTA ACTIVA IN-WORKOUT (Aparece al iniciar sesión de cardio) -->
+        <div id="cardioActiveView" class="cardio-active-view hidden">
+          <div class="cardio-inworkout-header">
+            <span class="cardio-live-indicator"><span class="pulse-dot"></span> EN SESIÓN</span>
+            <span id="cardioActiveActivityName" class="cardio-active-activity-badge">🏃 Carrera en Campo</span>
+          </div>
+
+          <div id="cardioHiitLabel" class="cardio-hiit-label hidden">TRABAJO · Ronda 1/8</div>
+          
+          <!-- Cronómetro gigante central de alta visibilidad -->
+          <div class="cardio-giant-display-box">
+            <div class="cardio-timer-label">TIEMPO TRANSCURRIDO</div>
+            <div id="cardioDigits" class="cardio-digits-giant tabular-nums">00:00</div>
+            <div id="cardioHiitCountdown" class="cardio-hiit-countdown hidden tabular-nums">40</div>
+          </div>
+
+          <div class="cardio-active-metrics-summary">
+            <div class="active-metric-pill">
+              <span class="active-metric-lbl">Ritmo</span>
+              <span id="cardioActivePace" class="active-metric-val tabular-nums">--:--</span>
+            </div>
+            <div class="active-metric-pill">
+              <span class="active-metric-lbl">Distancia</span>
+              <span id="cardioActiveDist" class="active-metric-val tabular-nums">0.00 km</span>
+            </div>
+            <div class="active-metric-pill">
+              <span class="active-metric-lbl">Calorías</span>
+              <span id="cardioActiveKcal" class="active-metric-val tabular-nums">0 kcal</span>
+            </div>
+          </div>
+
+          <!-- Botones grandes de alta accesibilidad táctil para el gimnasio -->
+          <div class="cardio-active-controls">
+            <button id="btnCardioPauseResume" class="btn-cardio-giant-pause" type="button">
+              <span id="cardioPauseResumeIcon">⏸</span> <span id="cardioPauseResumeText">Pausar</span>
+            </button>
+            <button id="btnCardioFinishWorkout" class="btn-cardio-giant-finish" type="button">
+              🏁 Finalizar Sesión
+            </button>
+          </div>
+        </div>
+
+        <!-- VISTA DE CONFIGURACIÓN PRE-ENTRENO (Oculta durante ejecución activa) -->
+        <div id="cardioConfigView" class="cardio-config-view">
+          <div class="panel-section-header">
+            <h2 class="panel-title cardio-title">🏃 Disciplinas de Cardio</h2>
+            <span class="panel-subtitle">Elige disciplina y configura antes de iniciar</span>
+          </div>
+
+          <div class="cardio-activity-scroller">
+            <div id="cardioActivitySelector" class="cardio-activity-selector" role="group" aria-label="Tipo de actividad"></div>
+          </div>
+
+          <div class="cardio-config-section cardio-metrics-grid">
+            <!-- Distancia -->
+            <div class="metric-card metric-card-input metric-card-distance">
+              <span class="metric-card-title">Distancia</span>
+              <div class="metric-stepper-row">
+                <button id="btnDecDist" class="metric-stepper-btn" type="button" aria-label="Reducir distancia">−</button>
+                <div class="metric-number-field">
+                  <input id="cardioDistanceInput" class="metric-distance-input tabular-nums" type="number" min="0.01" max="999.99" step="0.01" value="3.50" inputmode="decimal" aria-label="Distancia exacta en kilómetros">
+                  <span class="metric-unit-badge">km</span>
+                </div>
+                <button id="btnIncDist" class="metric-stepper-btn" type="button" aria-label="Aumentar distancia">+</button>
+              </div>
+              <span class="metric-lbl">Puedes escribir el valor exacto</span>
+            </div>
+
+            <!-- Ritmo -->
+            <div class="metric-card metric-card-stat">
+              <span id="cardioPaceVal" class="metric-val tabular-nums">--:--</span>
+              <span class="metric-lbl">Ritmo (min/km)</span>
+            </div>
+
+            <!-- Calorías -->
+            <div class="metric-card metric-card-stat">
+              <span id="cardioCaloriesVal" class="metric-val tabular-nums">0</span>
+              <span class="metric-lbl">Calorías estimadas</span>
+            </div>
+
+            <!-- Peso Corporal -->
+            <div class="metric-card metric-card-input metric-card-weight">
+              <span class="metric-card-title">Peso corporal</span>
+              <div class="metric-stepper-row">
+                <button id="btnDecWeight" class="metric-stepper-btn" type="button" aria-label="Reducir peso">−</button>
+                <div class="metric-number-field">
+                  <input id="cardioWeightInput" class="metric-distance-input tabular-nums" type="number" min="30" max="250" step="0.5" value="72.0" inputmode="decimal" aria-label="Peso corporal en kilogramos">
+                  <span class="metric-unit-badge">kg</span>
+                </div>
+                <button id="btnIncWeight" class="metric-stepper-btn" type="button" aria-label="Aumentar peso">+</button>
+              </div>
+              <span class="metric-lbl">Para estimar calorías</span>
+            </div>
+          </div>
+
+          <!-- RPE Slider -->
+          <div class="rpe-container cardio-config-section">
+            <div class="rpe-header">
+              <span class="rpe-label">Esfuerzo Percibido (RPE 1–10):</span>
+              <span id="rpeValueText" class="rpe-val-text">7 — Intenso</span>
+            </div>
+            <div class="rpe-slider-wrap">
+              <input type="range" id="rpeRangeInput" class="rpe-slider" min="1" max="10" value="7" aria-label="Escala de esfuerzo percibido">
+            </div>
+          </div>
+        </div>
+      </section>

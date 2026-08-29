@@ -1,0 +1,103 @@
+/* ==========================================================================
+   AuraFit Pro — Dark Cyber-Performance SaaS Design System
+   Módulo CSS: tokens
+   (Fragmento dividido de styles.css — no editar a mano, usar scripts/split-css.js)
+   ========================================================================== */
+
+/* ==========================================================================
+   AuraFit Pro — Dark Cyber-Performance SaaS Design System
+   Diseñado para Alto Rendimiento Deportivo, Uso con Una Sola Mano en Gimnasio
+   ========================================================================== */
+
+:root {
+  /* Colors */
+  --bg-abyssal: #070A0F;        /* Negro Abisal Profundo */
+  --surface-glass-1: rgba(17, 24, 39, 0.75);  /* Surface Level 1 Glass */
+  --surface-glass-2: rgba(31, 41, 55, 0.85);  /* Surface Level 2 Glass */
+  --surface-hover: rgba(55, 65, 81, 0.9);
+  
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-active: #38BDF8;
+
+  /* Accents */
+  --accent-cyan: #38BDF8;       /* Electric Cyan (Fuerza / Pesas) */
+  --accent-cyan-glow: rgba(56, 189, 248, 0.35);
+  
+  --accent-amber: #F59E0B;      /* Energy Amber (Cardio / Tiempo) */
+  --accent-pink: #EC4899;       /* Neon Pink (Cardio Alta Intensidad) */
+  --accent-cardio-glow: rgba(236, 72, 153, 0.35);
+
+  --accent-emerald: #10B981;    /* Emerald Green (Éxito / Completado) */
+  --accent-emerald-glow: rgba(16, 185, 129, 0.35);
+
+  --accent-rose: #F43F5E;       /* Rose / Red (Alerta / Borrado / RPE Alto) */
+
+  /* Text & Typography */
+  --text-main: #F9FAFB;        /* Pure crisp white */
+  --text-subtle: #9CA3AF;      /* Soft grey */
+  --text-muted: #6B7280;       /* Muted text */
+
+  /* Layout & Utility */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --touch-target-min: 48px;     /* Ergonomía táctil para uso en gimnasio */
+  
+  --shadow-cyber: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+  --transition-cubic: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   RESET & BASE STYLES
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-abyssal);
+  color: var(--text-main);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(236, 72, 153, 0.05) 0%, transparent 45%);
+}
+
+/* Eliminar spinners nativos en inputs numéricos */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 680px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 120px;
+}
+
+/* Tabular Numbers for Timers & Weights */
+.tabular-nums {
+  font-family: 'Outfit', monospace, sans-serif;
+  font-variant-numeric: tabular-nums;
+}

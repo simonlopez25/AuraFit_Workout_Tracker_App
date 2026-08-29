@@ -15,13 +15,71 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <!-- AuraFit Pro Design System -->
-    <link rel="stylesheet" href="css/styles.css" />
+    <!-- AuraFit Pro Design System (CSS modulares) -->
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/widgets.css" />
+    <link rel="stylesheet" href="css/cardio.css" />
+    <link rel="stylesheet" href="css/workout.css" />
+    <link rel="stylesheet" href="css/modals.css" />
+    <link rel="stylesheet" href="css/importer-timer.css" />
+    <link rel="stylesheet" href="css/header-actions.css" />
+    <link rel="stylesheet" href="css/states.css" />
+    <link rel="stylesheet" href="css/catalog.css" />
+    <link rel="stylesheet" href="css/active-modes.css" />
+    <link rel="stylesheet" href="css/auth.css" />
   </head>
   <body>
     <div id="app" class="app-container">
 
-      <!-- 1. ENCABEZADO PRINCIPAL RESPONSIVE -->
+<!-- SHELL: SIDEBAR DE ESCRITORIO -->
+<aside class="desktop-sidebar" id="desktopSidebar" aria-label="Navegación principal">
+  <div class="sidebar-brand">
+    <span class="brand-icon">⚡</span>
+    <span class="brand-name">AURA<span class="highlight-cyber">FIT</span> <span class="saas-badge">PRO</span></span>
+  </div>
+
+  <div class="sidebar-user" id="sidebarUserCard">
+    <span class="sidebar-user-avatar">👤</span>
+    <div class="sidebar-user-info">
+      <span class="sidebar-user-name" id="sidebarUserName">Atleta AuraFit</span>
+      <span class="sidebar-user-level" id="sidebarUserLevel">Nivel 1 · 0 XP</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="sidebar-nav-item is-active" data-nav-action="go-strength">
+      <span class="sidebar-nav-icon">🏋️</span> Fuerza & Calistenia
+    </button>
+    <button class="sidebar-nav-item" data-nav-action="go-cardio">
+      <span class="sidebar-nav-icon">🏃</span> Cardio & Aeróbico
+    </button>
+    <button class="sidebar-nav-item" data-nav-action="open-new-routine">
+      <span class="sidebar-nav-icon">➕</span> Nueva Rutina
+    </button>
+    <button class="sidebar-nav-item" data-nav-action="open-profile">
+      <span class="sidebar-nav-icon">🏅</span> Logros & Perfil
+    </button>
+    <button class="sidebar-nav-item" data-nav-action="open-analyst">
+      <span class="sidebar-nav-icon">🤖</span> Sugerencias IA
+    </button>
+    <button class="sidebar-nav-item" data-nav-action="open-import">
+      <span class="sidebar-nav-icon">📥</span> Importar rutina
+    </button>
+    <button class="sidebar-nav-item" data-nav-action="open-backup">
+      <span class="sidebar-nav-icon">💾</span> Copia de respaldo
+    </button>
+    <button class="sidebar-nav-item" data-nav-action="open-sync">
+      <span class="sidebar-nav-icon">☁️</span> Sincronizar Nube
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <span class="sidebar-version">AuraFit Pro v1.0</span>
+  </div>
+</aside>
+
+<!-- 1. ENCABEZADO PRINCIPAL RESPONSIVE -->
       <header class="app-header">
         <div class="brand">
           <span class="brand-icon">⚡</span>
@@ -73,7 +131,7 @@
         </div>
       </header>
 
-      <!-- 2. CONMUTADOR DE MÓDULO: Fuerza vs Cardio -->
+<!-- 2. CONMUTADOR DE MÓDULO: Fuerza vs Cardio -->
       <nav class="module-switcher" role="tablist" aria-label="Módulo de entrenamiento">
         <button id="btnSwitchStrength" class="module-btn active-strength" role="tab" aria-selected="true">
           <span>🏋️</span> <span>Fuerza & Calistenia</span>
@@ -83,7 +141,7 @@
         </button>
       </nav>
 
-      <!-- 3. BANNER COMPACTO DE PROGRESO (1 SOLA LÍNEA) -->
+<!-- 3. BANNER COMPACTO DE PROGRESO (1 SOLA LÍNEA) -->
       <section id="progressBanner" class="progress-banner-compact" aria-label="Progreso del atleta" role="button" tabindex="0" title="Haz clic para ver tus logros y estadísticas completas">
         <div class="progress-banner-pill">
           <span id="athleteLevelIcon" class="banner-level-badge">⚡</span>
@@ -99,7 +157,7 @@
         <span class="banner-open-hint">Ver logros ›</span>
       </section>
 
-      <!-- 4. PLANIFICADOR SEMANAL -->
+<!-- 4. PLANIFICADOR SEMANAL -->
       <section class="calendar-section" aria-label="Planificador semanal">
         <div class="calendar-header">
           <span class="calendar-title">📅 Planificador Semanal</span>
@@ -110,7 +168,7 @@
         </div>
       </section>
 
-      <!-- 5. PANEL DE CARDIO & AERÓBICO (Módulo independiente) -->
+<!-- 5. PANEL DE CARDIO & AERÓBICO (Módulo independiente) -->
       <section id="cardioPanel" class="cardio-panel hidden" aria-label="Módulo de cardio" role="tabpanel">
         
         <!-- VISTA ACTIVA IN-WORKOUT (Aparece al iniciar sesión de cardio) -->
@@ -181,13 +239,11 @@
               <span class="metric-lbl">Puedes escribir el valor exacto</span>
             </div>
 
-            <!-- Ritmo -->
             <div class="metric-card metric-card-stat">
               <span id="cardioPaceVal" class="metric-val tabular-nums">--:--</span>
               <span class="metric-lbl">Ritmo (min/km)</span>
             </div>
 
-            <!-- Calorías -->
             <div class="metric-card metric-card-stat">
               <span id="cardioCaloriesVal" class="metric-val tabular-nums">0</span>
               <span class="metric-lbl">Calorías estimadas</span>
@@ -221,7 +277,7 @@
         </div>
       </section>
 
-      <!-- 6. PANEL DE FUERZA & CALISTENIA (módulo principal) -->
+<!-- 6. PANEL DE FUERZA & CALISTENIA (módulo principal) -->
       <section id="strengthPanel" class="strength-panel" role="tabpanel">
 
         <!-- Selector de Modo de Entrenamiento -->
@@ -277,7 +333,7 @@
         </main>
       </section>
 
-      <!-- 7. BARRA CONTEXTUAL INFERIOR (CTA ÚNICO Y DINÁMICO) -->
+<!-- 7. BARRA CONTEXTUAL INFERIOR (CTA ÚNICO Y DINÁMICO) -->
       <div id="contextActionBar" class="context-action-bar">
         <div id="contextTimerDisplay" class="context-timer-pill hidden">
           <span class="pulse-dot"></span>
@@ -289,7 +345,7 @@
         </div>
       </div>
 
-      <!-- ======================================================
+<!-- ======================================================
            MODALES
            ====================================================== -->
 
@@ -605,7 +661,7 @@
         </div>
       </div>
 
-      <!-- 10. MODAL DE AUTENTICACIÓN SUPABASE -->
+<!-- 10. MODAL DE AUTENTICACIÓN SUPABASE -->
       <div id="modalAuth" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
         <div class="modal-card auth-modal-card">
           <header class="modal-header">
@@ -647,9 +703,9 @@
         </div>
       </div>
 
-    </div><!-- /#app -->
+</div><!-- /#app -->
 
-    <!-- SUPABASE SDK (CDN) -->
+<!-- SUPABASE SDK (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- MÓDULOS JS DESACOPLADOS -->
@@ -666,3 +722,4 @@
     <script src="js/app.js"></script>
   </body>
 </html>
+

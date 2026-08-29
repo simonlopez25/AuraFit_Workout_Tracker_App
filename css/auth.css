@@ -1,0 +1,220 @@
+/* ==========================================================================
+   AuraFit Pro — Dark Cyber-Performance SaaS Design System
+   Módulo CSS: auth
+   (Fragmento dividido de styles.css — no editar a mano, usar scripts/split-css.js)
+   ========================================================================== */
+
+/* ==========================================================================
+   SUPABASE AUTHENTICATION & CLOUD SYNC UI (Ref: image_8.png)
+   ========================================================================== */
+.header-auth-zone {
+  display: flex;
+  align-items: center;
+}
+
+.btn-auth-trigger {
+  border-color: rgba(0, 210, 255, 0.35) !important;
+  color: #00d2ff !important;
+  height: 38px !important;
+}
+
+.btn-auth-trigger:hover {
+  background: rgba(0, 210, 255, 0.15) !important;
+  border-color: #00d2ff !important;
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.3) !important;
+}
+
+.header-user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 210, 255, 0.05);
+  border: 1px solid rgba(0, 210, 255, 0.2);
+  padding: 4px 8px 4px 10px;
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(16px);
+  height: 38px;
+  transition: var(--transition-cubic);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.2) inset;
+}
+
+.header-user-pill:hover {
+  border-color: rgba(0, 210, 255, 0.45);
+  background: rgba(0, 210, 255, 0.1);
+  box-shadow: 0 0 16px rgba(0,210,255,0.15);
+}
+
+.user-pill-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0,210,255,0.35), rgba(236,72,153,0.35));
+  border: 1.5px solid rgba(0,210,255,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.user-pill-email {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-main);
+  max-width: 88px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .user-pill-email {
+    display: none;
+  }
+
+  .header-user-pill {
+    gap: 4px;
+    padding: 4px 5px;
+  }
+
+  .logout-text {
+    display: none;
+  }
+
+  .btn-header-cta {
+    padding: 8px 12px !important;
+  }
+}
+
+.btn-logout {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition-cubic);
+  white-space: nowrap;
+}
+
+.btn-logout:hover {
+  background: rgba(239, 68, 68, 0.28);
+  color: #fff;
+  border-color: #ef4444;
+  box-shadow: 0 0 10px rgba(239,68,68,0.2);
+}
+
+.logout-icon {
+  font-size: 0.76rem;
+  opacity: 0.8;
+}
+
+/* NOTE: Cardio metric card styles, steppers, and RPE slider are defined
+   in the primary block above (search for CARDIO METRICS GRID). These
+   duplicate rules have been removed to avoid cascade conflicts. */
+
+/* Auth Modal Styles */
+.auth-modal-card {
+  max-width: 420px;
+  width: 100%;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: var(--surface-glass-2);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auth-tab-btn {
+  padding: 10px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-subtle);
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--transition-cubic);
+}
+
+.auth-tab-btn:hover {
+  color: var(--text-main);
+}
+
+.auth-tab-btn.active {
+  background: #00d2ff;
+  color: #070A0F;
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.4);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-alert {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.auth-alert.alert-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.auth-alert.alert-success {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+}
+
+.btn-auth-submit {
+  min-height: 48px;
+  font-size: 0.96rem;
+  margin-top: 6px;
+}
+
+.auth-modal-footer {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.auth-security-badge {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.spinner-small {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-top-color: #070A0F;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-left: 6px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+

@@ -1,0 +1,338 @@
+/* ==========================================================================
+   AuraFit Pro — Dark Cyber-Performance SaaS Design System
+   Módulo CSS: modals
+   (Fragmento dividido de styles.css — no editar a mano, usar scripts/split-css.js)
+   ========================================================================== */
+
+/* ==========================================================================
+   MODALES (Overlay, Card, Layout)
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(7, 10, 15, 0.92);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  padding: 16px;
+}
+
+.modal-card {
+  background: var(--surface-glass-1);
+  border: 1px solid var(--border-glass);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--shadow-cyber);
+}
+
+.modal-large {
+  max-width: 660px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-medium {
+  max-width: 540px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-glass);
+  padding-bottom: 12px;
+}
+
+.modal-header h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: var(--transition-cubic);
+}
+
+.btn-close:hover {
+  color: var(--accent-rose);
+}
+
+/* PRESETS IN ROUTINE CREATOR */
+.preset-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-label {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preset-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.btn-preset {
+  background: var(--surface-glass-2);
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--transition-cubic);
+  text-align: center;
+  min-height: 44px;
+}
+
+.btn-preset:hover {
+  border-color: var(--accent-cyan);
+  background: var(--surface-hover);
+  color: var(--accent-cyan);
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: var(--border-glass);
+  margin: 4px 0;
+}
+
+/* FORM ELEMENTS */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--text-subtle);
+}
+
+.exercise-suggestion-help {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: .77rem;
+  line-height: 1.45;
+}
+
+.draft-name[list] {
+  background-image: linear-gradient(45deg, transparent 50%, var(--accent-cyan) 50%), linear-gradient(135deg, var(--accent-cyan) 50%, transparent 50%);
+  background-position: calc(100% - 15px) 50%, calc(100% - 10px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 28px;
+}
+
+.form-group input,
+.form-group select {
+  background: var(--bg-abyssal);
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  outline: none;
+  transition: var(--transition-cubic);
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 10px var(--accent-cyan-glow);
+}
+
+/* EXERCISE ROW EDITOR IN CREATOR MODAL WITH (+) INSERTION & DELETE (🗑️) */
+.exercises-input-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.ex-input-row {
+  background: var(--surface-glass-2);
+  border: 1px solid var(--border-glass);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-cyber);
+}
+
+.ex-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-glass);
+  padding-bottom: 8px;
+}
+
+.ex-row-badge {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.ex-controls-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-add-inline {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--transition-cubic);
+}
+
+.btn-add-inline:hover {
+  background: var(--accent-emerald);
+  color: #070A0F;
+}
+
+.btn-delete-row {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--accent-rose);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-cubic);
+}
+
+.btn-delete-row:hover {
+  background: var(--accent-rose);
+  color: #fff;
+}
+
+.btn-reorder {
+  background: var(--bg-abyssal);
+  color: var(--text-subtle);
+  border: 1px solid var(--border-glass);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ex-name-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.ex-fields-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr 1fr;
+  gap: 10px;
+  align-items: end;
+}
+
+@media (max-width: 580px) {
+  .ex-name-grid,
+  .ex-fields-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn-primary {
+  background: var(--accent-cyan);
+  color: #070A0F;
+  border: none;
+  padding: 12px 22px;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  font-size: 0.92rem;
+  cursor: pointer;
+  min-height: 48px;
+  transition: var(--transition-cubic);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 16px var(--accent-cyan-glow);
+}
+
+.btn-secondary {
+  background: var(--surface-hover);
+  color: var(--text-main);
+  border: 1px solid var(--border-glass);
+  padding: 12px 22px;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  font-size: 0.92rem;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.btn-secondary-sm {
+  background: var(--surface-glass-2);
+  color: var(--text-main);
+  border: 1px solid var(--border-glass);
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.btn-full {
+  width: 100%;
+  margin: 8px 0;
+}

@@ -1,0 +1,261 @@
+/* ==========================================================================
+   AuraFit Pro — Dark Cyber-Performance SaaS Design System
+   Módulo CSS: active-modes
+   (Fragmento dividido de styles.css — no editar a mano, usar scripts/split-css.js)
+   ========================================================================== */
+
+/* ==========================================================================
+   CARDIO IN-WORKOUT MODE
+   ========================================================================== */
+.cardio-activity-scroller {
+  display: flex;
+  overflow-x: auto;
+  padding: 4px 0;
+  margin-bottom: 12px;
+}
+
+.cardio-active-view {
+  background: linear-gradient(180deg, rgba(236, 72, 153, 0.08) 0%, rgba(7, 10, 15, 0.95) 100%);
+  border: 1px solid var(--accent-pink);
+  border-radius: var(--radius-lg);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: center;
+  box-shadow: 0 0 32px rgba(236, 72, 153, 0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+.cardio-inworkout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardio-live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(236, 72, 153, 0.4);
+  color: var(--accent-pink);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-pink);
+  box-shadow: 0 0 8px var(--accent-pink);
+  animation: pulseDot 1.4s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.7); }
+}
+
+.cardio-active-activity-badge {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.cardio-giant-display-box {
+  padding: 16px 8px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cardio-digits-giant {
+  font-size: clamp(3.2rem, 12vw, 4.8rem);
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 0 24px rgba(236, 72, 153, 0.6);
+  letter-spacing: 2px;
+  line-height: 1.1;
+  margin: 6px 0;
+}
+
+.cardio-active-metrics-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.active-metric-pill {
+  background: var(--surface-glass-2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 6px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.active-metric-lbl {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.active-metric-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--accent-amber);
+}
+
+.cardio-active-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.btn-cardio-giant-pause {
+  min-height: 56px;
+  background: var(--surface-glass-2);
+  color: var(--accent-amber);
+  border: 1px solid var(--accent-amber);
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition-cubic);
+}
+
+.btn-cardio-giant-pause:hover {
+  background: rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
+}
+
+.btn-cardio-giant-finish {
+  min-height: 56px;
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 0 20px var(--accent-emerald-glow);
+  transition: var(--transition-cubic);
+}
+
+.btn-cardio-giant-finish:hover {
+  box-shadow: 0 0 28px var(--accent-emerald-glow);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   UNIFIED CONTEXTUAL BOTTOM ACTION BAR (CTA DINÁMICO)
+   ========================================================================== */
+.context-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, 680px);
+  padding: 12px 16px 20px;
+  background: linear-gradient(180deg, rgba(7, 10, 15, 0) 0%, rgba(7, 10, 15, 0.95) 24%, #070A0F 100%);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.context-action-bar * {
+  pointer-events: auto;
+}
+
+.context-timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(17, 24, 39, 0.95);
+  border: 1px solid #00d2ff;
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+.context-elapsed {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #00d2ff;
+}
+
+.context-action-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-context-secondary {
+  background: var(--surface-glass-2);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  min-height: 52px;
+  white-space: nowrap;
+}
+
+.btn-primary-glow {
+  flex: 1;
+  min-height: 52px;
+  background: linear-gradient(135deg, #00d2ff, #0284c7);
+  color: #070A0F;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.02rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 210, 255, 0.35);
+  transition: var(--transition-cubic);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary-glow:hover {
+  box-shadow: 0 6px 28px rgba(0, 210, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-primary-glow.finish-mode {
+  background: linear-gradient(135deg, var(--accent-emerald), #059669);
+  color: #fff;
+  box-shadow: 0 4px 20px var(--accent-emerald-glow);
+}
+
+.btn-primary-glow.finish-mode:hover {
+  box-shadow: 0 6px 28px var(--accent-emerald-glow);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

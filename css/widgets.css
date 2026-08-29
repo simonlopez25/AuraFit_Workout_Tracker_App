@@ -1,0 +1,247 @@
+/* ==========================================================================
+   AuraFit Pro — Dark Cyber-Performance SaaS Design System
+   Módulo CSS: widgets
+   (Fragmento dividido de styles.css — no editar a mano, usar scripts/split-css.js)
+   ========================================================================== */
+
+/* ==========================================================================
+   GAMIFICATION WIDGET ("EN RACHA")
+   ========================================================================== */
+.gamification-bar {
+  background: var(--surface-glass-1);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-cyber);
+  position: relative;
+  overflow: hidden;
+}
+
+.gamification-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--accent-cyan), var(--accent-pink));
+}
+
+.gamification-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.streak-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: var(--accent-emerald);
+}
+
+.streak-icon {
+  font-size: 1.1rem;
+  animation: pulseFlame 1.8s infinite ease-in-out;
+}
+
+@keyframes pulseFlame {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px var(--accent-emerald)); }
+  50% { transform: scale(1.2); filter: drop-shadow(0 0 10px var(--accent-emerald)); }
+}
+
+.athlete-level-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--accent-amber);
+}
+
+.xp-progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.xp-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-subtle);
+  font-weight: 700;
+}
+
+.xp-progress-bar {
+  height: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--border-glass);
+}
+
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
+  border-radius: var(--radius-full);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.badges-container {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.badge-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-glass-2);
+  border: 1px solid var(--border-glass);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.badge-item.unlocked {
+  border-color: var(--accent-amber);
+  color: var(--text-main);
+  background: rgba(245, 158, 11, 0.1);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+}
+
+/* ==========================================================================
+   HORIZONTAL CALENDAR & PLANNER
+   ========================================================================== */
+.calendar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.calendar-week-grid {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.calendar-week-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.calendar-day-card {
+  flex: 0 0 calc(14.28% - 7px);
+  min-width: 68px;
+  background: var(--surface-glass-1);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 12px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 90px;
+  cursor: pointer;
+  transition: var(--transition-cubic);
+  scroll-snap-align: start;
+}
+
+.calendar-day-card:hover {
+  border-color: var(--accent-cyan);
+  transform: translateY(-2px);
+  background: var(--surface-glass-2);
+}
+
+.calendar-day-card.today {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 14px var(--accent-cyan-glow);
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.day-name {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.day-number {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.day-status-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 5px;
+  border-radius: 4px;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-scheduled {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.status-cardio-scheduled {
+  background: rgba(236, 72, 153, 0.15);
+  color: var(--accent-pink);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+
+.status-completed {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 8px var(--accent-emerald-glow);
+}
+
+.status-rest {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+}

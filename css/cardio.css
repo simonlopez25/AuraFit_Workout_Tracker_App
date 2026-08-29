@@ -1,0 +1,342 @@
+/* ==========================================================================
+   AuraFit Pro — Dark Cyber-Performance SaaS Design System
+   Módulo CSS: cardio
+   (Fragmento dividido de styles.css — no editar a mano, usar scripts/split-css.js)
+   ========================================================================== */
+
+/* ==========================================================================
+   PANEL DE CARDIO & TRABAJO AERÓBICO
+   ========================================================================== */
+.cardio-panel {
+  background: var(--surface-glass-1);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-cyber);
+}
+
+.cardio-activity-selector {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cardio-activity-selector::-webkit-scrollbar {
+  display: none;
+}
+
+.btn-activity {
+  background: var(--surface-glass-2);
+  border: 1px solid var(--border-glass);
+  color: var(--text-subtle);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: var(--transition-cubic);
+  min-height: 44px;
+}
+
+.btn-activity.active {
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-amber));
+  color: #070A0F;
+  border-color: var(--accent-pink);
+  font-weight: 800;
+  box-shadow: 0 0 16px var(--accent-cardio-glow);
+}
+
+.cardio-timer-box {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--accent-pink);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 20px var(--accent-cardio-glow);
+}
+
+.cardio-digits {
+  font-size: 3.8rem;
+  font-weight: 800;
+  color: var(--accent-pink);
+  letter-spacing: 2px;
+}
+
+.cardio-timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.btn-cardio-action {
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-cubic);
+}
+
+.btn-cardio-start {
+  background: var(--accent-emerald);
+  color: #070A0F;
+  box-shadow: 0 0 16px var(--accent-emerald-glow);
+}
+
+.btn-cardio-pause {
+  background: var(--accent-amber);
+  color: #070A0F;
+}
+
+.btn-cardio-stop {
+  background: var(--accent-rose);
+  color: #FFF;
+}
+
+/* ==========================================================================
+   CARDIO METRICS GRID & STEPPER CONTROLS (image_9.png)
+   ========================================================================== */
+.cardio-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 540px) {
+  .cardio-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Base card — used for stat-only cards (pace, calories) */
+.metric-card {
+  background: var(--surface-glass-2);
+  border: 1px solid rgba(255,255,255,0.07);
+  min-height: 112px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-align: center;
+  transition: var(--transition-cubic);
+}
+
+.metric-card:hover {
+  border-color: rgba(245,158,11,0.25);
+}
+
+/* Input variant — left aligned, has steppers */
+.metric-card-input {
+  text-align: left;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.metric-card-stat {
+  align-items: center;
+  justify-content: center;
+}
+
+.metric-card-title {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+/* Stepper row — symmetric: [−] [field] [+] */
+.metric-stepper-row {
+  display: grid;
+  grid-template-columns: 38px 1fr 38px;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.metric-stepper-btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 8px;
+  background: rgba(245,158,11,0.06);
+  color: var(--accent-amber);
+  font-size: 1.25rem;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-cubic);
+  line-height: 1;
+}
+
+.metric-stepper-btn:hover {
+  border-color: var(--accent-amber);
+  background: rgba(245,158,11,0.18);
+  box-shadow: 0 0 10px rgba(245,158,11,0.25);
+}
+
+.metric-stepper-btn:active {
+  transform: scale(0.94);
+}
+
+/* Number field — wraps input + unit badge */
+.metric-number-field {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  min-width: 0;
+  height: 38px;
+  padding: 0 8px;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 8px;
+  background: rgba(0,0,0,0.35);
+  gap: 3px;
+  transition: var(--transition-cubic);
+}
+
+.metric-number-field:focus-within {
+  border-color: var(--accent-amber);
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.12);
+}
+
+.metric-distance-input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--accent-amber);
+  font-family: 'Outfit', monospace;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-align: right;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Dimmer unit badge (km / kg) */
+.metric-unit-badge,
+.metric-number-field > span {
+  font-family: 'Outfit', monospace;
+  color: rgba(255,255,255,0.38);
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Big number for stat-only cards */
+.metric-val {
+  font-family: 'Outfit', monospace;
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--accent-amber);
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.metric-lbl {
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* ==========================================================================
+   RPE SLIDER — Premium gradient + visible thumb
+   ========================================================================== */
+.rpe-container {
+  background: var(--surface-glass-2);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rpe-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rpe-label {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.rpe-val-text {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--accent-amber);
+  font-family: 'Outfit', monospace;
+}
+
+.rpe-slider-wrap {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.rpe-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #10B981 0%, #F59E0B 55%, #EF4444 100%);
+  outline: none;
+  cursor: pointer;
+}
+
+.rpe-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.55), 0 0 0 4px rgba(255,255,255,0.15);
+  cursor: grab;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rpe-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.2);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.6), 0 0 0 6px rgba(255,255,255,0.2);
+}
+
+.rpe-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.55);
+  cursor: grab;
+  transition: transform 0.15s ease;
+}

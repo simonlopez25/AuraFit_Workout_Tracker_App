@@ -1,0 +1,51 @@
+<!-- 1. ENCABEZADO PRINCIPAL RESPONSIVE -->
+      <header class="app-header">
+        <div class="brand">
+          <span class="brand-icon">⚡</span>
+          <span class="brand-name">AURA<span class="highlight-cyber">FIT</span> <span class="saas-badge">PRO</span></span>
+        </div>
+        <div class="header-actions">
+          <!-- Zona de Autenticación / Sesión en la nube -->
+          <div id="headerAuthZone" class="header-auth-zone">
+            <button id="btnOpenAuthModal" class="btn-secondary-sm btn-header-action btn-auth-trigger" title="Sincronizar con Supabase Cloud">
+              ☁️ <span class="btn-text-desktop">Iniciar sesión</span>
+            </button>
+            <div id="headerUserPill" class="header-user-pill hidden" title="Cuenta activa">
+              <span class="user-pill-avatar">👤</span>
+              <span id="headerUserEmail" class="user-pill-email">usuario</span>
+              <button id="btnLogout" class="btn-logout" title="Cerrar sesión" aria-label="Cerrar sesión">
+                <span class="logout-icon">⎋</span>
+                <span class="logout-text">Salir</span>
+              </button>
+            </div>
+          </div>
+
+          <button id="btnNewRoutineModal" class="btn-primary btn-header-cta" title="Crear nueva rutina">
+            + Nueva Rutina
+          </button>
+          
+          <!-- Menú de opciones secundarias -->
+          <div class="header-more-wrap">
+            <button id="btnHeaderMore" class="btn-secondary-sm btn-icon-more" title="Más opciones" aria-label="Más opciones" aria-haspopup="true" aria-expanded="false">
+              ⋯
+            </button>
+            <div id="headerDropdownMenu" class="header-dropdown-menu hidden" role="menu">
+              <button id="btnOpenAnalyst" class="dropdown-menu-item" role="menuitem" type="button">
+                🤖 Sugerencias IA
+              </button>
+              <button id="btnOpenProfileBadges" class="dropdown-menu-item" role="menuitem" type="button">
+                🏆 Logros & Perfil
+              </button>
+              <button id="btnOpenSmartImport" class="dropdown-menu-item" role="menuitem" type="button">
+                📥 Importar rutina
+              </button>
+              <button id="btnExportRoutines" class="dropdown-menu-item" role="menuitem" type="button">
+                💾 Copia de respaldo
+              </button>
+              <button id="btnDropdownSync" class="dropdown-menu-item" role="menuitem" type="button">
+                ☁️ Sincronizar en la Nube
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>

@@ -1,0 +1,360 @@
+/* ==========================================================================
+   AuraFit Pro — Dark Cyber-Performance SaaS Design System
+   Módulo CSS: workout
+   (Fragmento dividido de styles.css — no editar a mano, usar scripts/split-css.js)
+   ========================================================================== */
+
+/* ==========================================================================
+   ROUTINE SELECTION TABS & MANAGEMENT CONTROLS (CLEAN FLEXBOX FIX)
+   ========================================================================== */
+.routine-tabs-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.routine-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px;
+  flex: 1;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.routine-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-btn {
+  background: var(--surface-glass-1);
+  color: var(--text-subtle);
+  border: 1px solid var(--border-glass);
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  font-weight: 800;
+  font-size: 0.88rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: var(--transition-cubic);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  scroll-snap-align: start;
+}
+
+.tab-btn:hover {
+  background: var(--surface-glass-2);
+  color: var(--text-main);
+  border-color: var(--accent-cyan);
+}
+
+.tab-btn.active {
+  background: var(--accent-cyan);
+  color: #070A0F;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 4px 16px var(--accent-cyan-glow);
+}
+
+.routine-management-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-edit-tab {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition-cubic);
+}
+
+.btn-edit-tab:hover {
+  background: var(--accent-cyan);
+  color: #070A0F;
+  box-shadow: 0 0 14px var(--accent-cyan-glow);
+}
+
+.btn-delete-tab {
+  background: rgba(244, 63, 94, 0.12);
+  color: var(--accent-rose);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition-cubic);
+}
+
+.btn-delete-tab:hover {
+  background: var(--accent-rose);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.35);
+}
+
+/* ==========================================================================
+   IN-WORKOUT STREAM CONTINUOUS VIEW WITH STEPPER BUTTONS (+/-)
+   ========================================================================== */
+.routine-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.exercise-card {
+  background: var(--surface-glass-1);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-cyber);
+}
+
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.exercise-title-area {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.exercise-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.badges-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.badge-load {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.load-heavy {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--accent-rose);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.load-bodyweight {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.load-dumbbell {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-amber);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.load-machine {
+  background: rgba(236, 72, 153, 0.15);
+  color: var(--accent-pink);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+
+.badge-muscle {
+  background: var(--surface-glass-2);
+  color: var(--text-subtle);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-glass);
+}
+
+.btn-info-icon {
+  background: var(--surface-glass-2);
+  color: var(--accent-cyan);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-full);
+  width: 36px;
+  height: 36px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-cubic);
+}
+
+.btn-info-icon:hover {
+  background: var(--accent-cyan);
+  color: #070A0F;
+  transform: scale(1.1);
+}
+
+/* SETS TABLE & STEPPERS (+/-) FOR 1-HANDED GYM USE */
+.sets-table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.set-table-header {
+  display: grid;
+  grid-template-columns: 40px 1.4fr 1.4fr 54px;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.set-row {
+  display: grid;
+  grid-template-columns: 40px 1.4fr 1.4fr 54px;
+  gap: 8px;
+  align-items: center;
+}
+
+.set-number {
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.stepper-group {
+  display: flex;
+  align-items: center;
+  background: var(--bg-abyssal);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.btn-step {
+  width: 32px;
+  height: 42px;
+  background: var(--surface-glass-2);
+  border: none;
+  color: var(--accent-cyan);
+  font-weight: 800;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-cubic);
+}
+
+.btn-step:hover {
+  background: var(--surface-hover);
+}
+
+.stepper-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.set-check {
+  height: 44px;
+  background: var(--surface-glass-2);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: var(--transition-cubic);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.set-check:hover {
+  border-color: var(--accent-emerald);
+  color: var(--accent-emerald);
+}
+
+.set-check.completed {
+  background: var(--accent-emerald);
+  color: #070A0F;
+  border-color: var(--accent-emerald);
+  box-shadow: 0 0 16px var(--accent-emerald-glow);
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   BARRA DE ACCIÓN INFERIOR FIX
+   ========================================================================== */
+.action-bar-bottom {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 648px;
+  z-index: 50;
+}
+
+.btn-primary-glow {
+  width: 100%;
+  min-height: 52px;
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, #0284C7 100%);
+  color: #070A0F;
+  border: none;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 6px 24px var(--accent-cyan-glow);
+  cursor: pointer;
+  transition: var(--transition-cubic);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--accent-cyan-glow);
+}
