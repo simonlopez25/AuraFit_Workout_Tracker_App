@@ -1,0 +1,600 @@
+/* ==========================================================================
+   AuraFit Pro — Elite Performance & Luxury Bronze Design System
+   Inspirado en clubes de alto rendimiento, acabados en bronce esculpido,
+   vidrio obsidiana y ergonomía atlética de nivel olímpico.
+   ========================================================================== */
+
+:root {
+  /* Dark Obsidian & Luxury Surfaces */
+  --bg-primary: #08090c;
+  --bg-surface: #0f1117;
+  --bg-surface-elevated: #161922;
+  --bg-surface-card: linear-gradient(160deg, #131620 0%, #0c0e14 100%);
+  --bg-glass: rgba(15, 17, 23, 0.88);
+
+  /* Polished Bronze & Champagne Gold Palette */
+  --bronze-primary: #d9935a;
+  --bronze-dark: #b86e34;
+  --bronze-light: #f0c294;
+  --bronze-glow: rgba(217, 147, 90, 0.3);
+  --bronze-soft-bg: rgba(217, 147, 90, 0.08);
+
+  --champagne-gold: #f8dfc2;
+  --gradient-metallic: linear-gradient(135deg, #f3cfab 0%, #d9935a 50%, #a45e28 100%);
+  --gradient-btn: linear-gradient(135deg, #e4a36f 0%, #b86e34 100%);
+
+  /* Functional Accents */
+  --accent-emerald: #10b981;
+  --accent-emerald-glow: rgba(16, 185, 129, 0.3);
+  --accent-cyan: #38bdf8;
+  --accent-rose: #f43f5e;
+
+  /* Hairline Borders */
+  --border-subtle: rgba(217, 147, 90, 0.14);
+  --border-active: #d9935a;
+  --border-card: rgba(255, 255, 255, 0.06);
+
+  /* Typography */
+  --text-main: #fcfbfa;
+  --text-subtle: #cbd5e1;
+  --text-muted: #8e95a5;
+  --text-bronze: #e4a36f;
+
+  /* Sizing & Touch Ergonomics (Atomic Standard >= 48px) */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 9999px;
+  --touch-target: 48px;
+
+  --shadow-luxury: 0 12px 36px -8px rgba(0, 0, 0, 0.8), 0 0 20px -6px var(--bronze-glow);
+  --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  display: flex;
+  justify-content: center;
+  background-image: 
+    radial-gradient(circle at 15% 10%, rgba(217, 147, 90, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(184, 110, 52, 0.05) 0%, transparent 45%);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.015em;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* App Container (Safe Area Responsive) */
+.app-container {
+  width: 100%;
+  max-width: 680px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-bottom: max(124px, calc(100px + env(safe-area-inset-bottom)));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+}
+
+/* Header with Metallic Aura Logo */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(217, 147, 90, 0.45));
+}
+
+.brand-title {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  background: var(--gradient-metallic);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brand-badge {
+  background: rgba(217, 147, 90, 0.15);
+  border: 1px solid rgba(217, 147, 90, 0.35);
+  color: var(--bronze-light);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  -webkit-text-fill-color: initial;
+}
+
+/* Bottom Navigation (Luxury Ergonomic Dock) */
+.bottom-nav {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 24px);
+  max-width: 560px;
+  background: rgba(14, 16, 22, 0.94);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 6px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 25px -5px rgba(217, 147, 90, 0.15);
+  backdrop-filter: blur(20px);
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 52px;
+}
+
+.nav-item.active {
+  color: #0b0c10;
+  background: var(--gradient-btn);
+  font-weight: 800;
+  box-shadow: 0 4px 18px var(--bronze-glow);
+}
+
+/* Cards & Surfaces */
+.card {
+  background: var(--bg-surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: rgba(217, 147, 90, 0.35);
+}
+
+/* Buttons (Atomic Tokens) */
+.btn-primary {
+  background: var(--gradient-btn);
+  color: #090a0d;
+  border: none;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 14px 22px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 52px;
+  box-shadow: 0 6px 20px -2px var(--bronze-glow);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background: var(--bg-surface-elevated);
+  color: var(--text-main);
+  border: 1px solid var(--border-subtle);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 48px;
+}
+
+.btn-secondary:hover {
+  border-color: var(--bronze-primary);
+  background: rgba(217, 147, 90, 0.08);
+}
+
+.btn-icon {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+  color: var(--bronze-light);
+  border-color: var(--bronze-primary);
+}
+
+.btn-danger {
+  background: rgba(244, 63, 94, 0.12);
+  color: var(--accent-rose);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Stepper Input: Ergonomic Gym Controls */
+.stepper-container {
+  display: flex;
+  align-items: center;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.stepper-btn {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  width: 46px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  transition: background 0.15s;
+}
+
+.stepper-btn:hover {
+  background: rgba(217, 147, 90, 0.15);
+  color: var(--bronze-light);
+}
+
+.stepper-btn:active {
+  background: rgba(217, 147, 90, 0.3);
+}
+
+.stepper-val {
+  min-width: 58px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+/* Set Row Component */
+.set-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 1fr 54px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-elevated);
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.2s ease;
+}
+
+.set-row.completed {
+  background: rgba(16, 185, 129, 0.09);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.set-type-tag {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 4px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 2px;
+}
+
+.set-row.completed .set-type-tag {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--accent-emerald);
+}
+
+.set-check-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.03);
+  color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.set-check-btn.completed {
+  background: var(--accent-emerald);
+  border-color: var(--accent-emerald);
+  color: #051d14;
+  box-shadow: 0 0 18px var(--accent-emerald-glow);
+  transform: scale(1.04);
+}
+
+/* Floating Rest Timer Bar */
+.rest-timer-bar {
+  position: fixed;
+  bottom: 86px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 540px;
+  background: #11141c;
+  border: 1px solid var(--bronze-primary);
+  border-radius: var(--radius-lg);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 25px -4px var(--bronze-glow);
+  z-index: 99;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.timer-digits {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--bronze-light);
+}
+
+.timer-adjust-btn {
+  background: rgba(217, 147, 90, 0.12);
+  border: 1px solid var(--border-subtle);
+  color: var(--bronze-light);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.timer-adjust-btn:hover {
+  background: rgba(217, 147, 90, 0.25);
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 200;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: #0f1118;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 560px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 24px;
+  box-shadow: var(--shadow-luxury);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN ACROSS ALL DEVICES (Mobiles, Foldables, Tablets, Desktop)
+   ========================================================================== */
+
+/* Custom Luxury Bronze Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(217, 147, 90, 0.25);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(217, 147, 90, 0.45);
+}
+
+/* Bottom Nav Safe Area */
+.bottom-nav {
+  bottom: max(14px, env(safe-area-inset-bottom));
+}
+
+.rest-timer-bar {
+  bottom: max(86px, calc(80px + env(safe-area-inset-bottom)));
+}
+
+/* Small to Medium Mobile Devices (<= 480px) */
+@media (max-width: 480px) {
+  .app-container {
+    padding: 12px;
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-bottom: max(120px, calc(100px + env(safe-area-inset-bottom)));
+  }
+
+  .app-header {
+    padding: 10px 14px;
+    margin-bottom: 14px;
+  }
+
+  .brand-title {
+    font-size: 18px;
+  }
+
+  .brand-logo-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .card {
+    padding: 16px;
+    margin-bottom: 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .set-row {
+    grid-template-columns: 40px 1fr 1fr 48px;
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .stepper-btn {
+    width: 38px;
+    height: 44px;
+    font-size: 16px;
+  }
+
+  .stepper-val {
+    min-width: 44px;
+    font-size: 14px;
+  }
+
+  .set-check-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .bottom-nav {
+    width: calc(100% - 16px);
+    padding: 6px 4px;
+  }
+
+  .nav-item {
+    padding: 6px 6px;
+    font-size: 10px;
+    min-width: 48px;
+  }
+
+  .rest-timer-bar {
+    width: calc(100% - 20px);
+    padding: 10px 14px;
+  }
+
+  .timer-digits {
+    font-size: 22px;
+  }
+
+  .modal-content {
+    padding: 18px 16px;
+    max-height: 92vh;
+  }
+}
+
+/* Ultra-compact devices (<= 360px) */
+@media (max-width: 360px) {
+  .set-row {
+    grid-template-columns: 32px 1fr 1fr 42px;
+    gap: 4px;
+  }
+  .stepper-btn {
+    width: 32px;
+  }
+}
