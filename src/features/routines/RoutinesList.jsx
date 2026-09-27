@@ -20,8 +20,12 @@ export default function RoutinesList({ onStartRoutine }) {
   const [allAvailableExercises, setAllAvailableExercises] = useState(EXERCISE_CATALOG);
 
   const loadRoutines = async () => {
-    const list = await db.routines.toArray();
-    setRoutines(list);
+    try {
+      const list = await db.routines.toArray();
+      setRoutines(list);
+    } catch (error) {
+      console.error('Error loading routines:', error);
+    }
   };
 
   useEffect(() => {
@@ -56,15 +60,26 @@ export default function RoutinesList({ onStartRoutine }) {
 
   const handleConfirmDelete = async () => {
     if (routineToDelete) {
-      await db.routines.delete(routineToDelete.id);
+      try {
+        await db.routines.delete(routineToDelete.id);
+      } catch (error) {
+        console.error('Error deleting routine:', error);
+        alert('No se pudo eliminar la rutina. Por favor intenta de nuevo.');
+        return;
+      }
       setRoutineToDelete(null);
       await loadRoutines();
     }
   };
 
   const handleReloadSamples = async () => {
-    await seedSampleRoutines();
-    await loadRoutines();
+    try {
+      await seedSampleRoutines();
+      await loadRoutines();
+    } catch (error) {
+      console.error('Error reloading sample routines:', error);
+      alert('No se pudieron cargar las plantillas de ejemplo.');
+    }
   };
 
   const handleAddExerciseToRoutine = (ex) => {
@@ -143,11 +158,17 @@ export default function RoutinesList({ onStartRoutine }) {
       updatedAt: new Date().toISOString()
     };
 
-    await db.routines.add(newRoutine);
-    setShowCreateModal(false);
-    setNewName('');
-    setRoutineExercises([]);
-    loadRoutines();
+    try {
+      await db.open();
+      await db.routines.add(newRoutine);
+      setShowCreateModal(false);
+      setNewName('');
+      setRoutineExercises([]);
+      await loadRoutines();
+    } catch (error) {
+      console.error('Error saving routine:', error);
+      alert(`No se pudo guardar la rutina: ${error?.message || 'Error desconocido'}`);
+    }
   };
 
   const filteredCatalog = allAvailableExercises.filter((item) =>
@@ -251,6 +272,24 @@ export default function RoutinesList({ onStartRoutine }) {
               onClick={handleReloadSamples}
             >
               <Sparkles size={16} color="var(--bronze-primary)" /> Cargar Plantillas de Ejemplo
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={async () => {
+                if (confirm('¿Resetear toda la base de datos? Se perderán rutinas, historial y configuración.')) {
+                  try {
+                    await db.delete();
+                    window.location.reload();
+                  } catch (error) {
+                    console.error('Error resetting database:', error);
+                    alert('No se pudo resetear la base de datos.');
+                  }
+                }
+              }}
+              style={{ borderColor: 'rgba(244, 63, 94, 0.4)', color: 'var(--accent-rose)' }}
+            >
+              Resetear Base de Datos
             </button>
           </div>
         </div>

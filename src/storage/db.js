@@ -12,7 +12,8 @@ db.version(1).stores({
 
 // Seed default routines only on first installation
 async function seedDefaults() {
-  const defaultRoutines = [
+  try {
+    const defaultRoutines = [
     {
       id: 'push_hypertrophy',
       name: 'Empuje — Fuerza & Pectoral (Push)',
@@ -223,10 +224,15 @@ async function seedDefaults() {
     { key: 'wakeLockEnabled', value: true },
     { key: 'defaultRestSeconds', value: 90 }
   ]);
+  } catch (error) {
+    console.error('Error seeding default routines:', error);
+    throw error;
+  }
 }
 
 export async function initDatabase() {
   try {
+    await db.open();
     const isInitialized = await db.settings.get('hasInitializedDatabase');
     if (!isInitialized) {
       await seedDefaults();

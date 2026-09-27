@@ -20,26 +20,29 @@ export default function RestTimerBar({
   }, [initialSeconds]);
 
   useEffect(() => {
+    const targetEnd = Date.now() + initialSeconds * 1000;
+    let lastTickSecond = null;
+
     intervalRef.current = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(intervalRef.current);
-          sound.playRestFinished();
-          vibrateRestFinished();
-          if (onFinish) onFinish();
-          return 0;
-        }
+      const remaining = Math.max(0, Math.ceil((targetEnd - Date.now()) / 1000));
+      setSecondsLeft(remaining);
 
-        if (prev <= 4 && prev > 1) {
-          sound.playCountdownTick();
-        }
-
-        return prev - 1;
-      });
+      if (remaining <= 0) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+        sound.playRestFinished();
+        vibrateRestFinished();
+        if (onFinish) onFinish();
+      } else if (remaining <= 4 && lastTickSecond !== remaining) {
+        lastTickSecond = remaining;
+        sound.playCountdownTick();
+      }
     }, 1000);
 
-    return () => clearInterval(intervalRef.current);
-  }, [onFinish]);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [initialSeconds, onFinish]);
 
   const addTime = (delta) => {
     setSecondsLeft((prev) => {
@@ -75,6 +78,7 @@ export default function RestTimerBar({
           </div>
           <div className="timer-digits tabular-nums">
             {minutes}:{seconds < 10 ? '0' : ''}{seconds}
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700, marginLeft: '6px' }}>seg</span>
           </div>
           {nextExerciseName && (
             <div style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
