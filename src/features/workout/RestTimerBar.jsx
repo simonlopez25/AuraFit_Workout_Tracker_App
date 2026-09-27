@@ -13,6 +13,16 @@ export default function RestTimerBar({
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
   const [totalSeconds, setTotalSeconds] = useState(initialSeconds);
   const intervalRef = useRef(null);
+  const onFinishRef = useRef(onFinish);
+  const onDismissRef = useRef(onDismiss);
+
+  useEffect(() => {
+    onFinishRef.current = onFinish;
+  }, [onFinish]);
+
+  useEffect(() => {
+    onDismissRef.current = onDismiss;
+  }, [onDismiss]);
 
   useEffect(() => {
     setSecondsLeft(initialSeconds);
@@ -32,7 +42,7 @@ export default function RestTimerBar({
         intervalRef.current = null;
         sound.playRestFinished();
         vibrateRestFinished();
-        if (onFinish) onFinish();
+        if (onFinishRef.current) onFinishRef.current();
       } else if (remaining <= 4 && lastTickSecond !== remaining) {
         lastTickSecond = remaining;
         sound.playCountdownTick();
@@ -42,7 +52,7 @@ export default function RestTimerBar({
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [initialSeconds, onFinish]);
+  }, [initialSeconds]);
 
   const addTime = (delta) => {
     setSecondsLeft((prev) => {
