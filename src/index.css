@@ -586,6 +586,44 @@ h1, h2, h3, h4, .font-heading {
     padding: 18px 16px;
     max-height: 92vh;
   }
+
+  /* Cardio responsive */
+  .cardio-hero-time {
+    font-size: 40px;
+  }
+
+  .cardio-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cardio-actions button {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .cardio-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .cardio-secondary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Medium devices (<= 768px) */
+@media (max-width: 768px) {
+  .cardio-hero-time {
+    font-size: 48px;
+  }
+
+  .cardio-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cardio-metrics > div:nth-child(3) {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Ultra-compact devices (<= 360px) */

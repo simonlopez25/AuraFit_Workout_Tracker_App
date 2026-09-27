@@ -159,12 +159,12 @@ export default function CardioView() {
           <div style={{ fontSize: '11px', color: 'var(--bronze-primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>
             {activity.icon} {activity.label}
           </div>
-          <div className="tabular-nums" style={{ fontSize: '56px', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1.1 }}>
+          <div className="tabular-nums cardio-hero-time" style={{ fontSize: '56px', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1.1 }}>
             {formatTime(elapsedSeconds)}
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '18px', marginTop: '18px' }}>
+        <div className="cardio-actions" style={{ display: 'flex', justifyContent: 'center', gap: '18px', marginTop: '18px' }}>
           <button
             type="button"
             className="btn-primary"
@@ -196,7 +196,7 @@ export default function CardioView() {
       </div>
 
       {/* Metrics grid */}
-      <div style={{
+      <div className="cardio-metrics" style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
         gap: '10px'
@@ -250,7 +250,7 @@ export default function CardioView() {
 
       {/* Secondary inputs */}
       <div className="card" style={{ padding: '16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div className="cardio-secondary-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <div>
             <label style={{ fontSize: '11px', fontWeight: 800, color: 'var(--text-muted)', display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>
               Peso corporal
