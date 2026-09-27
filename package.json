@@ -1,13 +1,23 @@
 {
   "name": "aurafit-workout-tracker",
   "version": "1.0.0",
+  "type": "module",
   "description": "Intelligent Calisthenics & Weights Tracker App",
   "main": "index.html",
   "scripts": {
-    "start": "serve .",
-    "build:html": "node scripts/build.js all",
-    "build:css": "node scripts/split-css.js",
-    "build": "npm run build:css && npm run build:html",
-    "verify": "node scripts/verify-ids.js && node scripts/verify-build.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.9.4",
+    "dexie": "^4.4.6",
+    "lucide-react": "^1.48.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.1"
   }
 }
