@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Plus, Dumbbell, Trash2, ArrowUp, ArrowDown, Settings2, Clock, Check, XCircle, Sparkles } from 'lucide-react';
+import { Play, Plus, Dumbbell, Trash2, ArrowUp, ArrowDown, Settings2, Clock, Check, XCircle, Sparkles, Pencil, Copy } from 'lucide-react';
 import { db, seedSampleRoutines } from '../../storage/db';
 import { EXERCISE_CATALOG } from '../../data/exerciseCatalog';
 import CustomExerciseModal from './CustomExerciseModal';
@@ -11,6 +11,7 @@ export default function RoutinesList({ onStartRoutine }) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showCustomExModal, setShowCustomExModal] = useState(false);
   const [routineToDelete, setRoutineToDelete] = useState(null);
+  const [editingRoutine, setEditingRoutine] = useState(null);
 
   // New routine builder state
   const [newName, setNewName] = useState('');
@@ -72,6 +73,45 @@ export default function RoutinesList({ onStartRoutine }) {
     }
   };
 
+  const handleStartEdit = (routine) => {
+    setEditingRoutine(routine);
+    setNewName(routine.name);
+    setNewCategory(routine.category);
+    setRoutineExercises(
+      routine.exercises.map((ex) => ({
+        id: ex.id,
+        name: ex.name,
+        muscle: ex.muscle,
+        category: ex.category || routine.category,
+        setsCount: ex.setsCount || ex.sets?.length || 3,
+        defaultReps: ex.sets?.[0]?.targetReps || ex.defaultReps || 10,
+        defaultWeightKg: ex.sets?.[0]?.targetWeightKg || ex.defaultWeightKg || 0,
+        targetRestSeconds: ex.targetRestSeconds || 90,
+        transitionRestSeconds: ex.transitionRestSeconds || 120,
+        techniqueNote: ex.techniqueNote || ''
+      }))
+    );
+    setShowCreateModal(true);
+  };
+
+  const handleDuplicate = async (routine) => {
+    try {
+      await db.open();
+      const duplicated = {
+        ...routine,
+        id: `routine_${Date.now()}`,
+        name: `${routine.name} (Copia)`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      await db.routines.add(duplicated);
+      await loadRoutines();
+    } catch (error) {
+      console.error('Error duplicating routine:', error);
+      alert('No se pudo duplicar la rutina.');
+    }
+  };
+
   const handleReloadSamples = async () => {
     try {
       await seedSampleRoutines();
@@ -126,6 +166,15 @@ export default function RoutinesList({ onStartRoutine }) {
     handleAddExerciseToRoutine(customEx);
   };
 
+  const resetFormState = () => {
+    setShowCreateModal(false);
+    setEditingRoutine(null);
+    setNewName('');
+    setNewCategory('fuerza');
+    setRoutineExercises([]);
+    setSearchExercise('');
+  };
+
   const handleSaveRoutine = async (e) => {
     e.preventDefault();
     if (!newName.trim()) return alert('Escribe un nombre para la rutina');
@@ -148,22 +197,28 @@ export default function RoutinesList({ onStartRoutine }) {
       }))
     }));
 
-    const newRoutine = {
-      id: `routine_${Date.now()}`,
-      name: newName.trim(),
-      category: newCategory,
-      targetRestSeconds: 90,
-      exercises: formattedExercises,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
     try {
       await db.open();
-      await db.routines.add(newRoutine);
-      setShowCreateModal(false);
-      setNewName('');
-      setRoutineExercises([]);
+      if (editingRoutine) {
+        await db.routines.update(editingRoutine.id, {
+          name: newName.trim(),
+          category: newCategory,
+          exercises: formattedExercises,
+          updatedAt: new Date().toISOString()
+        });
+      } else {
+        const newRoutine = {
+          id: `routine_${Date.now()}`,
+          name: newName.trim(),
+          category: newCategory,
+          targetRestSeconds: 90,
+          exercises: formattedExercises,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        await db.routines.add(newRoutine);
+      }
+      resetFormState();
       await loadRoutines();
     } catch (error) {
       console.error('Error saving routine:', error);
@@ -197,6 +252,7 @@ export default function RoutinesList({ onStartRoutine }) {
           className="btn-primary"
           style={{ minHeight: '48px', padding: '12px 20px', fontSize: '14px', marginTop: '10px' }}
           onClick={() => {
+            setEditingRoutine(null);
             setRoutineExercises([]);
             setNewName('');
             setShowCreateModal(true);
@@ -299,40 +355,91 @@ export default function RoutinesList({ onStartRoutine }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
         {filteredRoutines.map((routine) => (
           <div key={routine.id} className="card" style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px', gap: '12px' }}>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
                   <Badge variant="bronze">{routine.category}</Badge>
                   <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                     {routine.exercises?.length || 0} ejercicios planificados
                   </span>
                 </div>
-                <h3 style={{ fontSize: '19px', fontWeight: 800, color: 'var(--text-main)' }}>
+                <h3 style={{ fontSize: '19px', fontWeight: 800, color: 'var(--text-main)', wordBreak: 'break-word' }}>
                   {routine.name}
                 </h3>
+                {routine.updatedAt && (
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                    Actualizada: {new Date(routine.updatedAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  </span>
+                )}
               </div>
 
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setRoutineToDelete(routine);
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--text-muted)',
-                  cursor: 'pointer',
-                  padding: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  borderRadius: 'var(--radius-xs)',
-                  transition: 'color 0.15s'
-                }}
-                title="Eliminar rutina"
-              >
-                <Trash2 size={16} />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '2px', flexShrink: 0 }}>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleStartEdit(routine);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    padding: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    borderRadius: 'var(--radius-xs)',
+                    transition: 'color 0.15s'
+                  }}
+                  title="Editar rutina"
+                >
+                  <Pencil size={16} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDuplicate(routine);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    padding: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    borderRadius: 'var(--radius-xs)',
+                    transition: 'color 0.15s'
+                  }}
+                  title="Duplicar rutina"
+                >
+                  <Copy size={16} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setRoutineToDelete(routine);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    padding: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    borderRadius: 'var(--radius-xs)',
+                    transition: 'color 0.15s'
+                  }}
+                  title="Eliminar rutina"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
 
             {/* Exercises Preview Tags */}
@@ -376,16 +483,18 @@ export default function RoutinesList({ onStartRoutine }) {
 
       {/* Routine Builder Modal */}
       {showCreateModal && (
-        <div className="modal-overlay" onClick={() => setShowCreateModal(false)}>
+        <div className="modal-overlay" onClick={resetFormState}>
           <div className="modal-content" style={{ maxWidth: '640px' }} onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Settings2 size={20} color="var(--bronze-primary)" />
-                <h3 style={{ fontSize: '19px', fontWeight: 800 }}>Creador Profesional de Rutinas</h3>
+                <h3 style={{ fontSize: '19px', fontWeight: 800 }}>
+                  {editingRoutine ? 'Editar Rutina' : 'Creador Profesional de Rutinas'}
+                </h3>
               </div>
               <button
                 type="button"
-                onClick={() => setShowCreateModal(false)}
+                onClick={resetFormState}
                 style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
               >
                 <XCircle size={22} />
@@ -542,7 +651,7 @@ export default function RoutinesList({ onStartRoutine }) {
                         </div>
 
                         {/* Science parameters: sets, reps, weight, rest between sets, rest to next exercise */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                        <div className="exercise-params-grid" style={{ paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                           <div>
                             <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 700, display: 'block', marginBottom: '2px' }}>
                               Series
@@ -703,7 +812,7 @@ export default function RoutinesList({ onStartRoutine }) {
                 className="btn-primary"
                 style={{ width: '100%', minHeight: '52px', marginTop: '8px' }}
               >
-                Guardar Rutina Completa ({routineExercises.length} ejercicios)
+                {editingRoutine ? 'Actualizar Rutina' : 'Guardar Rutina Completa'} ({routineExercises.length} ejercicios)
               </button>
             </form>
           </div>

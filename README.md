@@ -1,6 +1,6 @@
-# AuraFit Pro — Tracker de Fuerza, Calistenia & Cardio
+# AuraFit — Tracker de Fuerza, Calistenia & Cardio
 
-AuraFit Pro es una aplicación web diseñada como tracker de entrenamiento de fuerza, calistenia y cardio. Está construida con React + Vite y pensada para ejecutarse completamente en el navegador: permite crear rutinas, programarlas por día de la semana, registrar sesiones y consultar el progreso acumulado, con una interfaz moderna de diseño luxury bronze y arquitectura Local-First.
+AuraFit es una aplicación web diseñada como tracker de entrenamiento de fuerza, calistenia y cardio. Está construida con React + Vite y pensada para ejecutarse completamente en el navegador: permite crear rutinas, programarlas por día de la semana, registrar sesiones y consultar el progreso acumulado, con una interfaz moderna de diseño luxury bronze y arquitectura Local-First.
 
 ## Características principales
 

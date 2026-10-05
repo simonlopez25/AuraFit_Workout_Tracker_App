@@ -16,7 +16,7 @@ export default function Logo({ size = 36, showGlow = true }) {
       )}
       <img
         src="/aurafit-logo.png"
-        alt="AuraFit Emblem"
+        alt="AuraFit"
         className="brand-logo-img"
         style={{
           width: `${size}px`,

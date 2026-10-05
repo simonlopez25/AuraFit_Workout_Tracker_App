@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
 
-export const db = new Dexie('AuraFitProDB');
+export const db = new Dexie('AuraFitDB');
 
 // Database schema definition
 db.version(1).stores({

@@ -48,26 +48,26 @@ class SoundService {
 
   // Quick crisp click for completing a set
   playSetComplete() {
-    this.playTone(587.33, 'sine', 0.12, 0.15); // D5
+    this.playTone(587.33, 'square', 0.15, 0.25); // D5
     setTimeout(() => {
-      this.playTone(880, 'sine', 0.2, 0.2); // A5
-    }, 100);
+      this.playTone(880, 'sine', 0.25, 0.3); // A5
+    }, 120);
   }
 
   // Warning tick when 3, 2, 1 seconds remain on rest timer
   playCountdownTick() {
-    this.playTone(440, 'triangle', 0.08, 0.1);
+    this.playTone(520, 'triangle', 0.12, 0.2);
   }
 
   // Double celebratory tone when rest timer reaches 0
   playRestFinished() {
-    this.playTone(523.25, 'sine', 0.15, 0.25); // C5
+    this.playTone(523.25, 'square', 0.2, 0.35); // C5
     setTimeout(() => {
-      this.playTone(659.25, 'sine', 0.15, 0.25); // E5
+      this.playTone(659.25, 'triangle', 0.2, 0.35); // E5
       setTimeout(() => {
-        this.playTone(783.99, 'sine', 0.35, 0.3); // G5
-      }, 150);
-    }, 150);
+        this.playTone(783.99, 'sine', 0.5, 0.45); // G5
+      }, 180);
+    }, 180);
   }
 }
 

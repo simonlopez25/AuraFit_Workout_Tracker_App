@@ -83,7 +83,7 @@ export default function App() {
           borderRadius: '50%',
           animation: 'spin 0.8s linear infinite'
         }} />
-        <span style={{ fontSize: '13px', fontWeight: 600 }}>Cargando AuraFit Pro...</span>
+        <span style={{ fontSize: '13px', fontWeight: 600 }}>Cargando AuraFit...</span>
       </div>
     );
   }

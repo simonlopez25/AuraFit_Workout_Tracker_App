@@ -1,5 +1,5 @@
 /* ==========================================================================
-   AuraFit Pro — Elite Performance & Luxury Bronze Design System
+   AuraFit — Elite Performance & Luxury Bronze Design System
    Inspirado en clubes de alto rendimiento, acabados en bronce esculpido,
    vidrio obsidiana y ergonomía atlética de nivel olímpico.
    ========================================================================== */
@@ -634,5 +634,26 @@ h1, h2, h3, h4, .font-heading {
   }
   .stepper-btn {
     width: 32px;
+  }
+}
+
+/* Exercise params grid in routine builder */
+.exercise-params-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .exercise-params-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .exercise-params-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
   }
 }
