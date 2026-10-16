@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, Square, Flame, Gauge, Footprints, Timer, Plus } from 'lucide-react';
-import { db } from '../../storage/db';
 import { sound } from '../../utils/sound';
+import { persistWorkout, enqueuePendingWorkout, createSnapshot, notifyDataChanged } from '../../storage/backups';
 
 const ACTIVITIES = [
   { id: 'walk', label: 'Caminata', icon: '🚶', defaultPace: 12 },
@@ -100,10 +100,28 @@ export default function CardioView() {
       notes: ''
     };
 
-    await db.workouts.add(workoutRecord);
-    setSavedMessage('Sesión guardada en tu historial');
-    setElapsedSeconds(0);
-    setDistanceKm(activityId === 'hiit' ? 0 : distanceKm);
+    try {
+      try {
+        // Guardado principal con reintentos (idempotente)
+        await persistWorkout(workoutRecord);
+      } catch (primaryErr) {
+        // IndexedDB no disponible: cola de emergencia en localStorage
+        console.error('IndexedDB falló, encolando cardio local:', primaryErr);
+        enqueuePendingWorkout(workoutRecord);
+      }
+      await createSnapshot('cardio-guardado');
+      notifyDataChanged();
+      setSavedMessage({ text: 'Sesión guardada en tu historial' });
+      setElapsedSeconds(0);
+      setDistanceKm(activityId === 'hiit' ? 0 : distanceKm);
+    } catch (err) {
+      // Nada se pierde: los datos siguen en pantalla para reintentar
+      console.error('Error guardando sesión de cardio:', err);
+      setSavedMessage({
+        text: 'No se pudo guardar la sesión: el almacenamiento del navegador no está disponible. Vuelve a pulsar Finalizar para reintentar.',
+        error: true
+      });
+    }
   };
 
   const handleReset = () => {
@@ -296,15 +314,15 @@ export default function CardioView() {
 
       {savedMessage && (
         <div style={{
-          background: 'rgba(16, 185, 129, 0.12)',
-          border: '1px solid var(--accent-emerald)',
-          color: 'var(--accent-emerald)',
+          background: savedMessage.error ? 'rgba(244, 63, 94, 0.12)' : 'rgba(16, 185, 129, 0.12)',
+          border: `1px solid ${savedMessage.error ? 'var(--accent-rose)' : 'var(--accent-emerald)'}`,
+          color: savedMessage.error ? 'var(--accent-rose)' : 'var(--accent-emerald)',
           padding: '10px 14px',
           borderRadius: 'var(--radius-md)',
           fontSize: '13px',
           fontWeight: 700
         }}>
-          {savedMessage}
+          {savedMessage.text}
         </div>
       )}
     </div>

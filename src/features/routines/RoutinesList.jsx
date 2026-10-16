@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Plus, Dumbbell, Trash2, ArrowUp, ArrowDown, Settings2, Clock, Check, XCircle, Sparkles, Pencil, Copy } from 'lucide-react';
-import { db, seedSampleRoutines } from '../../storage/db';
+import { db, seedSampleRoutines, exportAllData } from '../../storage/db';
+import { createSnapshot, notifyDataChanged, onDataChanged } from '../../storage/backups';
 import { EXERCISE_CATALOG } from '../../data/exerciseCatalog';
 import CustomExerciseModal from './CustomExerciseModal';
+import UndoToast from '../../components/UndoToast';
 import { Badge } from '../../components/atoms/Button';
 
 export default function RoutinesList({ onStartRoutine }) {
@@ -12,6 +14,7 @@ export default function RoutinesList({ onStartRoutine }) {
   const [showCustomExModal, setShowCustomExModal] = useState(false);
   const [routineToDelete, setRoutineToDelete] = useState(null);
   const [editingRoutine, setEditingRoutine] = useState(null);
+  const [undoTarget, setUndoTarget] = useState(null);
 
   // New routine builder state
   const [newName, setNewName] = useState('');
@@ -23,7 +26,8 @@ export default function RoutinesList({ onStartRoutine }) {
   const loadRoutines = async () => {
     try {
       const list = await db.routines.toArray();
-      setRoutines(list);
+      // Papelera: las rutinas con deletedAt no se muestran en la lista
+      setRoutines(list.filter((r) => !r.deletedAt));
     } catch (error) {
       console.error('Error loading routines:', error);
     }
@@ -31,6 +35,8 @@ export default function RoutinesList({ onStartRoutine }) {
 
   useEffect(() => {
     loadRoutines();
+    // Recargar cuando otras vistas (backup, papelera) modifican los datos
+    return onDataChanged(loadRoutines);
   }, []);
 
   const handleStart = (routine) => {
@@ -60,16 +66,34 @@ export default function RoutinesList({ onStartRoutine }) {
   };
 
   const handleConfirmDelete = async () => {
-    if (routineToDelete) {
-      try {
-        await db.routines.delete(routineToDelete.id);
-      } catch (error) {
-        console.error('Error deleting routine:', error);
-        alert('No se pudo eliminar la rutina. Por favor intenta de nuevo.');
-        return;
-      }
-      setRoutineToDelete(null);
+    if (!routineToDelete) return;
+    try {
+      // Respaldo automático ANTES de tocar nada
+      await createSnapshot('antes-de-eliminar-rutina');
+      // Soft-delete: va a la papelera, nunca se borra de inmediato
+      await db.routines.update(routineToDelete.id, { deletedAt: new Date().toISOString() });
+    } catch (error) {
+      console.error('Error deleting routine:', error);
+      alert('No se pudo eliminar la rutina. Por favor intenta de nuevo.');
+      return;
+    }
+    const deleted = routineToDelete;
+    setRoutineToDelete(null);
+    setUndoTarget(deleted);
+    notifyDataChanged();
+    await loadRoutines();
+  };
+
+  const handleUndoDelete = async () => {
+    if (!undoTarget) return;
+    try {
+      await db.routines.update(undoTarget.id, { deletedAt: null });
+      setUndoTarget(null);
+      notifyDataChanged();
       await loadRoutines();
+    } catch (error) {
+      console.error('Error restoring routine:', error);
+      alert('No se pudo deshacer la eliminación.');
     }
   };
 
@@ -104,7 +128,10 @@ export default function RoutinesList({ onStartRoutine }) {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
+      delete duplicated.deletedAt;
       await db.routines.add(duplicated);
+      await createSnapshot('rutina-duplicada');
+      notifyDataChanged();
       await loadRoutines();
     } catch (error) {
       console.error('Error duplicating routine:', error);
@@ -115,6 +142,8 @@ export default function RoutinesList({ onStartRoutine }) {
   const handleReloadSamples = async () => {
     try {
       await seedSampleRoutines();
+      await createSnapshot('plantillas-recargadas');
+      notifyDataChanged();
       await loadRoutines();
     } catch (error) {
       console.error('Error reloading sample routines:', error);
@@ -219,6 +248,8 @@ export default function RoutinesList({ onStartRoutine }) {
         await db.routines.add(newRoutine);
       }
       resetFormState();
+      await createSnapshot(editingRoutine ? 'rutina-editada' : 'rutina-creada');
+      notifyDataChanged();
       await loadRoutines();
     } catch (error) {
       console.error('Error saving routine:', error);
@@ -308,7 +339,9 @@ export default function RoutinesList({ onStartRoutine }) {
           </div>
           <h3 style={{ fontSize: '18px', fontWeight: 800, marginBottom: '6px' }}>Todo Limpio — Sin Rutinas</h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '13px', maxWidth: '360px', margin: '0 auto 20px auto', lineHeight: '1.5' }}>
-            Has eliminado todas las rutinas. Puedes crear tu propia rutina personalizada o restaurar las plantillas de ejemplo cuando quieras.
+            Has eliminado todas las rutinas. Puedes crear tu propia rutina personalizada o restaurar
+            las plantillas de ejemplo cuando quieras. Las rutinas eliminadas quedan en la
+            Papelera (menú de Copia de Seguridad) por si cambias de opinión.
           </p>
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
@@ -333,14 +366,26 @@ export default function RoutinesList({ onStartRoutine }) {
               type="button"
               className="btn-secondary"
               onClick={async () => {
-                if (confirm('¿Resetear toda la base de datos? Se perderán rutinas, historial y configuración.')) {
-                  try {
-                    await db.delete();
-                    window.location.reload();
-                  } catch (error) {
-                    console.error('Error resetting database:', error);
-                    alert('No se pudo resetear la base de datos.');
-                  }
+                const word = prompt(
+                  '⚠️ Esta acción eliminará TODO: rutinas, historial de entrenamientos y días registrados.\n\n' +
+                  'Escribe RESET en mayúsculas para confirmar.\n' +
+                  '(Se descargará primero una copia .json como respaldo)'
+                );
+                if (word !== 'RESET') return;
+                try {
+                  await exportAllData();
+                } catch (exportErr) {
+                  console.warn('No se pudo exportar antes del reset:', exportErr);
+                }
+                try {
+                  await db.delete();
+                  // Limpiar espejos locales para que no salte la alarma de integridad
+                  localStorage.removeItem('aurafit_last_backup');
+                  localStorage.removeItem('aurafit_pending_workouts');
+                  window.location.reload();
+                } catch (error) {
+                  console.error('Error resetting database:', error);
+                  alert('No se pudo resetear la base de datos.');
                 }
               }}
               style={{ borderColor: 'rgba(244, 63, 94, 0.4)', color: 'var(--accent-rose)' }}
@@ -849,7 +894,8 @@ export default function RoutinesList({ onStartRoutine }) {
               ¿Eliminar "{routineToDelete.name}"?
             </h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: '22px', lineHeight: '1.5' }}>
-              Esta acción eliminará esta rutina de tu almacenamiento local permanentemente. Puedes crear una nueva en cualquier momento.
+              La rutina irá a la Papelera (podrás deshacerla o restaurarla desde Copia de Seguridad).
+              Tu historial de entrenamientos no se ve afectado.
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -871,6 +917,15 @@ export default function RoutinesList({ onStartRoutine }) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Toast de deshacer tras eliminar */}
+      {undoTarget && (
+        <UndoToast
+          message={`"${undoTarget.name}" movida a la papelera`}
+          onUndo={handleUndoDelete}
+          onDismiss={() => setUndoTarget(null)}
+        />
       )}
     </div>
   );
