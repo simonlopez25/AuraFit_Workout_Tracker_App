@@ -10,7 +10,7 @@ export default function CalendarView() {
   const [selectedDayString, setSelectedDayString] = useState(null);
 
   const loadWorkouts = async () => {
-    const list = await db.workouts.toArray();
+    const list = await db.workouts.filter((w) => !w.deletedAt).toArray();
     setWorkouts(list);
   };
 

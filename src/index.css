@@ -657,3 +657,64 @@ h1, h2, h3, h4, .font-heading {
     gap: 4px;
   }
 }
+
+/* Undo toast (papelera / deshacer) */
+.undo-toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: max(92px, calc(86px + env(safe-area-inset-bottom)));
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(92vw, 480px);
+  padding: 12px 14px;
+  background: var(--bg-surface-card, #12141c);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  animation: undo-toast-in 0.2s ease;
+}
+
+@keyframes undo-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.undo-toast-msg {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.35;
+}
+
+.undo-toast-action {
+  flex-shrink: 0;
+  background: var(--gradient-btn);
+  color: #090a0d;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 14px;
+  min-height: 36px;
+  cursor: pointer;
+}
+
+.undo-toast-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}

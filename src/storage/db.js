@@ -10,10 +10,22 @@ db.version(1).stores({
   settings: 'key'
 });
 
-// Seed default routines only on first installation
-async function seedDefaults() {
-  try {
-    const defaultRoutines = [
+// v2: soft-delete (papelera) para rutinas/historial + tabla de respaldos automáticos
+db.version(2).stores({
+  routines: 'id, name, category, updatedAt, deletedAt',
+  workouts: 'id, routineId, routineName, date, startedAt, endedAt, deletedAt',
+  backups: 'id, createdAt, reason'
+});
+
+// Si otra pestaña necesita actualizar el esquema, cerramos en vez de bloquear
+db.on('versionchange', () => db.close());
+
+// ---------------------------------------------------------------------------
+// Datos por defecto (solo se siembran en la PRIMERA instalación, y nunca más)
+// ---------------------------------------------------------------------------
+
+function buildDefaultRoutines() {
+  return [
     {
       id: 'push_hypertrophy',
       name: 'Empuje — Fuerza & Pectoral (Push)',
@@ -202,63 +214,102 @@ async function seedDefaults() {
       updatedAt: new Date().toISOString()
     }
   ];
+}
 
-  await db.routines.bulkAdd(defaultRoutines);
+// Initial default schedule: Lunes = Empuje, Martes = Tracción, Miércoles = Pierna,
+// Jueves = Empuje, Viernes = Tracción, Sábado = Calistenia
+const DEFAULT_SCHEDULE = [
+  { dayIndex: 0, routineId: 'push_hypertrophy', routineName: 'Empuje (Push)' },
+  { dayIndex: 1, routineId: 'pull_hypertrophy', routineName: 'Tracción (Pull)' },
+  { dayIndex: 2, routineId: 'legs_core_power', routineName: 'Pierna & Core' },
+  { dayIndex: 3, routineId: 'push_hypertrophy', routineName: 'Empuje (Push)' },
+  { dayIndex: 4, routineId: 'pull_hypertrophy', routineName: 'Tracción (Pull)' },
+  { dayIndex: 5, routineId: 'calisthenics_elite', routineName: 'Calistenia' }
+];
 
-  // Initial default schedule: Lunes = Empuje, Martes = Tracción, Miércoles = Pierna, Jueves = Empuje, Viernes = Tracción, Sábado = Calistenia
-  const defaultSchedule = [
-    { dayIndex: 0, routineId: 'push_hypertrophy', routineName: 'Empuje (Push)' },
-    { dayIndex: 1, routineId: 'pull_hypertrophy', routineName: 'Tracción (Pull)' },
-    { dayIndex: 2, routineId: 'legs_core_power', routineName: 'Pierna & Core' },
-    { dayIndex: 3, routineId: 'push_hypertrophy', routineName: 'Empuje (Push)' },
-    { dayIndex: 4, routineId: 'pull_hypertrophy', routineName: 'Tracción (Pull)' },
-    { dayIndex: 5, routineId: 'calisthenics_elite', routineName: 'Calistenia' }
-  ];
-  await db.schedule.bulkAdd(defaultSchedule);
+const DEFAULT_SETTINGS = [
+  { key: 'soundEnabled', value: true },
+  { key: 'vibrationEnabled', value: true },
+  { key: 'wakeLockEnabled', value: true },
+  { key: 'defaultRestSeconds', value: 90 }
+];
 
-  // Default settings
-  await db.settings.bulkPut([
-    { key: 'hasInitializedDatabase', value: true },
-    { key: 'soundEnabled', value: true },
-    { key: 'vibrationEnabled', value: true },
-    { key: 'wakeLockEnabled', value: true },
-    { key: 'defaultRestSeconds', value: 90 }
-  ]);
+// ---------------------------------------------------------------------------
+// Inicialización SEGURA
+// POLÍTICA DE ORO: esta app NUNCA borra la base de datos automáticamente.
+// Ante cualquier error se conserva todo y se permite reintentar.
+// ---------------------------------------------------------------------------
+
+async function seedDefaults() {
+  // Transacción atómica: o se siembra todo, o no se siembra nada.
+  // bulkPut = upsert: jamás falla por claves duplicadas.
+  await db.transaction('rw', db.routines, db.schedule, db.settings, async () => {
+    if ((await db.routines.count()) === 0) {
+      await db.routines.bulkPut(buildDefaultRoutines());
+    }
+    if ((await db.schedule.count()) === 0) {
+      await db.schedule.bulkPut(DEFAULT_SCHEDULE.map((s) => ({ ...s })));
+    }
+    await db.settings.bulkPut(DEFAULT_SETTINGS.map((s) => ({ ...s })));
+    // La bandera se escribe SOLO al final, dentro de la misma transacción.
+    await db.settings.put({ key: 'hasInitializedDatabase', value: true });
+  });
+}
+
+let initPromise = null;
+
+export function initDatabase() {
+  if (!initPromise) {
+    initPromise = (async () => {
+      await db.open();
+      const isInitialized = await db.settings.get('hasInitializedDatabase');
+      const routineCount = await db.routines.count();
+      const scheduleCount = await db.schedule.count();
+
+      if (!isInitialized && routineCount === 0 && scheduleCount === 0) {
+        // Primera instalación real: sembrar datos de ejemplo
+        await seedDefaults();
+      } else if (!isInitialized) {
+        // La bandera se perdió pero HAY datos: nunca re-sembrar ni borrar.
+        // Solo marcar como inicializado para no repetir esta rama.
+        await db.settings.put({ key: 'hasInitializedDatabase', value: true });
+      }
+      // Si hay error, se propaga al llamador: la UI muestra reintento.
+      // Bajo ninguna circunstancia se ejecuta db.delete() aquí.
+    })().catch((error) => {
+      initPromise = null; // Permitir reintento en la siguiente llamada
+      throw error;
+    });
+  }
+  return initPromise;
+}
+
+// Re-carga las plantillas de ejemplo SIN tocar datos del usuario.
+// Nunca borra nada ni elimina la bandera de inicialización.
+export async function seedSampleRoutines() {
+  try {
+    const templates = buildDefaultRoutines();
+    await db.transaction('rw', db.routines, db.schedule, db.settings, async () => {
+      for (const routine of templates) {
+        const exists = await db.routines.get(routine.id);
+        if (!exists) await db.routines.add(routine);
+      }
+      for (const slot of DEFAULT_SCHEDULE) {
+        const exists = await db.schedule.get(slot.dayIndex);
+        if (!exists) await db.schedule.add({ ...slot });
+      }
+      await db.settings.put({ key: 'hasInitializedDatabase', value: true });
+    });
   } catch (error) {
-    console.error('Error seeding default routines:', error);
+    console.error('Failed to seed sample routines:', error);
     throw error;
   }
 }
 
-export async function initDatabase() {
-  try {
-    await db.open();
-    const isInitialized = await db.settings.get('hasInitializedDatabase');
-    if (!isInitialized) {
-      await seedDefaults();
-    }
-  } catch (error) {
-    console.error('Database initialization failed, attempting reset:', error);
-    try {
-      await db.delete();
-      await seedDefaults();
-    } catch (resetError) {
-      console.error('Failed to reset database after initialization error:', resetError);
-    }
-  }
-}
+// ---------------------------------------------------------------------------
+// Backup Export, Import & Restore
+// ---------------------------------------------------------------------------
 
-// Optional helper to reload sample routines on request
-export async function seedSampleRoutines() {
-  try {
-    await db.settings.delete('hasInitializedDatabase');
-    await seedDefaults();
-  } catch (error) {
-    console.error('Failed to seed sample routines:', error);
-  }
-}
-
-// Backup Export & Import Utilities
 export async function exportAllData() {
   const routines = await db.routines.toArray();
   const workouts = await db.workouts.toArray();
@@ -266,6 +317,7 @@ export async function exportAllData() {
   const settings = await db.settings.toArray();
 
   const backup = {
+    app: 'AuraFit',
     version: 1,
     exportedAt: new Date().toISOString(),
     data: {
@@ -285,30 +337,36 @@ export async function exportAllData() {
   URL.revokeObjectURL(url);
 }
 
+// Reemplaza TODO el contenido de la BD por los datos indicados (transaccional).
+export async function restoreFromData(data) {
+  await db.transaction('rw', db.routines, db.workouts, db.schedule, db.settings, async () => {
+    await db.routines.clear();
+    if (Array.isArray(data.routines) && data.routines.length) {
+      await db.routines.bulkPut(data.routines);
+    }
+    await db.workouts.clear();
+    if (Array.isArray(data.workouts) && data.workouts.length) {
+      await db.workouts.bulkPut(data.workouts);
+    }
+    await db.schedule.clear();
+    if (Array.isArray(data.schedule) && data.schedule.length) {
+      await db.schedule.bulkPut(data.schedule);
+    }
+    await db.settings.clear();
+    if (Array.isArray(data.settings) && data.settings.length) {
+      await db.settings.bulkPut(data.settings);
+    }
+    await db.settings.put({ key: 'hasInitializedDatabase', value: true });
+  });
+}
+
 export async function importData(jsonString) {
   try {
     const parsed = JSON.parse(jsonString);
-    if (!parsed.data) throw new Error('Formato de backup inválido');
-
-    await db.transaction('rw', db.routines, db.workouts, db.schedule, db.settings, async () => {
-      if (parsed.data.routines?.length) {
-        await db.routines.clear();
-        await db.routines.bulkAdd(parsed.data.routines);
-      }
-      if (parsed.data.workouts?.length) {
-        await db.workouts.clear();
-        await db.workouts.bulkAdd(parsed.data.workouts);
-      }
-      if (parsed.data.schedule?.length) {
-        await db.schedule.clear();
-        await db.schedule.bulkAdd(parsed.data.schedule);
-      }
-      if (parsed.data.settings?.length) {
-        await db.settings.clear();
-        await db.settings.bulkPut(parsed.data.settings);
-      }
-    });
-
+    if (!parsed || typeof parsed !== 'object' || !parsed.data || typeof parsed.data !== 'object') {
+      throw new Error('Formato de backup inválido');
+    }
+    await restoreFromData(parsed.data);
     return { success: true, message: 'Datos importados correctamente.' };
   } catch (err) {
     console.error('Error importando backup:', err);

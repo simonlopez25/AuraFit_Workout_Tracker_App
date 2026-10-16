@@ -4,7 +4,7 @@ import { Play, Plus, CheckCircle2, XCircle, Dumbbell, Flame, Clock, Layers, Spar
 import SetRow from './SetRow';
 import RestTimerBar from './RestTimerBar';
 import { wakeLock } from '../../utils/wakeLock';
-import { db } from '../../storage/db';
+import { createSnapshot, persistWorkout, enqueuePendingWorkout, notifyDataChanged } from '../../storage/backups';
 import { EXERCISE_CATALOG } from '../../data/exerciseCatalog';
 import CustomExerciseModal from '../routines/CustomExerciseModal';
 import { Badge } from '../../components/atoms/Button';
@@ -22,6 +22,8 @@ export default function ActiveWorkout({
   const [searchExercise, setSearchExercise] = useState('');
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [availableCatalog, setAvailableCatalog] = useState(EXERCISE_CATALOG);
+  const [saveError, setSaveError] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Keep screen awake while workout is active
   useEffect(() => {
@@ -208,29 +210,55 @@ export default function ActiveWorkout({
   };
 
   const handleFinish = async () => {
-    confetti({
-      particleCount: 90,
-      spread: 75,
-      origin: { y: 0.6 }
-    });
+    if (isSaving) return;
+    setIsSaving(true);
+    setSaveError(null);
 
-    const endedAt = new Date().toISOString();
-    const workoutRecord = {
-      id: `wo_${Date.now()}`,
-      routineId: session.id || null,
-      routineName: session.name || 'Entrenamiento',
-      date: endedAt.slice(0, 10),
-      startedAt: session.startedAt,
-      endedAt: endedAt,
-      durationSeconds: elapsedSeconds,
-      totalVolumeKg: totalVolume,
-      totalReps: session.exercises.reduce((acc, ex) => acc + ex.sets.reduce((sAcc, s) => sAcc + (s.completed ? Number(s.reps) : 0), 0), 0),
-      exercises: session.exercises,
-      notes: ''
-    };
+    try {
+      const endedAt = new Date().toISOString();
+      const workoutRecord = {
+        id: `wo_${Date.now()}`,
+        routineId: session.id || null,
+        routineName: session.name || 'Entrenamiento',
+        date: endedAt.slice(0, 10),
+        startedAt: session.startedAt,
+        endedAt: endedAt,
+        durationSeconds: elapsedSeconds,
+        totalVolumeKg: totalVolume,
+        totalReps: session.exercises.reduce((acc, ex) => acc + ex.sets.reduce((sAcc, s) => sAcc + (s.completed ? Number(s.reps) : 0), 0), 0),
+        exercises: session.exercises,
+        notes: ''
+      };
 
-    await db.workouts.add(workoutRecord);
-    onFinishSession(workoutRecord);
+      try {
+        // Guardado principal con reintentos (put idempotente)
+        await persistWorkout(workoutRecord);
+      } catch (primaryErr) {
+        // IndexedDB no disponible: cola de emergencia en localStorage.
+        // Se vuelcará automáticamente en el próximo arranque.
+        console.error('IndexedDB falló, encolando respaldo local:', primaryErr);
+        enqueuePendingWorkout(workoutRecord);
+      }
+
+      // Todo persistido: celebrar, respaldar y cerrar la sesión
+      confetti({
+        particleCount: 90,
+        spread: 75,
+        origin: { y: 0.6 }
+      });
+      await createSnapshot('entreno-finalizado');
+      notifyDataChanged();
+      onFinishSession(workoutRecord);
+    } catch (err) {
+      // Ni siquiera la cola local funcionó: NO se pierde la sesión.
+      // Se mantiene intacta y el usuario puede reintentar.
+      console.error('Error guardando el entrenamiento:', err);
+      setSaveError(
+        'No se pudo guardar el entrenamiento: el almacenamiento del navegador no está disponible. Tu sesión sigue intacta.'
+      );
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const formatDuration = (secs) => {
@@ -388,6 +416,21 @@ export default function ActiveWorkout({
 
       {/* Action Buttons */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '8px' }}>
+        {saveError && (
+          <div style={{
+            padding: '14px 16px',
+            background: 'rgba(244, 63, 94, 0.1)',
+            border: '1px solid rgba(244, 63, 94, 0.45)',
+            borderRadius: 'var(--radius-md)',
+            color: 'var(--accent-rose)',
+            fontSize: '13px',
+            fontWeight: 700,
+            lineHeight: '1.5'
+          }}>
+            ⚠️ {saveError}
+          </div>
+        )}
+
         <button
           type="button"
           className="btn-secondary"
@@ -401,10 +444,15 @@ export default function ActiveWorkout({
           type="button"
           className="btn-primary"
           onClick={handleFinish}
-          style={{ width: '100%', minHeight: '56px', fontSize: '16px' }}
+          disabled={isSaving}
+          style={{ width: '100%', minHeight: '56px', fontSize: '16px', opacity: isSaving ? 0.7 : 1 }}
         >
           <CheckCircle2 size={20} />
-          Finalizar Sesión ({totalCompletedSets} series completas)
+          {isSaving
+            ? 'Guardando...'
+            : saveError
+              ? 'Reintentar Guardado'
+              : `Finalizar Sesión (${totalCompletedSets} series completas)`}
         </button>
       </div>
 

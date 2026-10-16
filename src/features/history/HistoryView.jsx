@@ -1,25 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { Dumbbell, Clock, Flame, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { db } from '../../storage/db';
+import { createSnapshot, notifyDataChanged, onDataChanged } from '../../storage/backups';
+import UndoToast from '../../components/UndoToast';
 
 export default function HistoryView() {
   const [workouts, setWorkouts] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
+  const [undoTarget, setUndoTarget] = useState(null);
 
   const loadHistory = async () => {
-    const list = await db.workouts.reverse().sortBy('date');
+    // Papelera: excluir registros con deletedAt
+    const list = await db.workouts.filter((w) => !w.deletedAt).toArray();
+    list.sort(
+      (a, b) =>
+        String(b.date || '').localeCompare(String(a.date || '')) ||
+        String(b.startedAt || '').localeCompare(String(a.startedAt || ''))
+    );
     setWorkouts(list);
   };
 
   useEffect(() => {
     loadHistory();
+    return onDataChanged(loadHistory);
   }, []);
 
   const handleDelete = async (id, e) => {
     e.stopPropagation();
-    if (confirm('¿Eliminar este registro de entrenamiento?')) {
-      await db.workouts.delete(id);
-      loadHistory();
+    const target = workouts.find((w) => w.id === id);
+    if (!confirm('¿Eliminar este registro de entrenamiento? (irá a la papelera y podrás deshacerlo)')) return;
+    try {
+      // Respaldo automático ANTES de tocar nada
+      await createSnapshot('antes-de-eliminar-historial');
+      // Soft-delete: nunca borrado inmediato e irreversible
+      await db.workouts.update(id, { deletedAt: new Date().toISOString() });
+    } catch (error) {
+      console.error('Error deleting workout:', error);
+      alert('No se pudo eliminar el registro. Por favor intenta de nuevo.');
+      return;
+    }
+    setUndoTarget(target || { id, name: 'Registro' });
+    notifyDataChanged();
+    await loadHistory();
+  };
+
+  const handleUndoDelete = async () => {
+    if (!undoTarget) return;
+    try {
+      await db.workouts.update(undoTarget.id, { deletedAt: null });
+      setUndoTarget(null);
+      notifyDataChanged();
+      await loadHistory();
+    } catch (error) {
+      console.error('Error restoring workout:', error);
+      alert('No se pudo deshacer la eliminación.');
     }
   };
 
@@ -149,6 +183,15 @@ export default function HistoryView() {
             );
           })}
         </div>
+      )}
+
+      {/* Toast de deshacer tras eliminar */}
+      {undoTarget && (
+        <UndoToast
+          message="Registro movido a la papelera"
+          onUndo={handleUndoDelete}
+          onDismiss={() => setUndoTarget(null)}
+        />
       )}
     </div>
   );
